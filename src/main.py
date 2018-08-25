@@ -17,7 +17,7 @@ from lib.DataProvider import date
 # 2013-07-01.csv, 2013-07-07.csv, 2013-10-07.csv,
 # 2013-10-13.csv, 2013-12-16.csv, 2013-12-22.csv
 
-FOLDER = "/home/ryouta/lab/data/capital_area/"
+FOLDER = "/home/vagrant/mount_folder/lab/data"
 TEST_CSV = "2013-07-07.csv"
 MESH_SUFFIX = "_onMesh.csv"
 SOURCE_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -61,18 +61,12 @@ if __name__ == '__main__':
   for abs_file in utils.file_list(FOLDER):
     print("File: " + abs_file)
     main = Main(abs_file)
-    df = main.df
-    byH = main.byH
+    # df = main.df
+    # byH = main.byH
 
-    print(sex.rate(df))
+    # print(sex.rate(df))
 
     # print(geo.mesh_counter(df, byH[0], 1))
     
   elapsed_time = time.time() - start
   print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
-
-
-
-
-
-  
