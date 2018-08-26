@@ -7,7 +7,7 @@ sudo apt-get install apache2
 sudo add-apt-repository ppa:ubuntugis/ppa && sudo apt-get update
 sudo apt-get install gdal-bin
 pip3 install --user git+https://github.com/geopandas/geopandas/
-pip3 install --user pandas jupyter geopy descartes python-geohash tqdm
+pip3 install --user pandas jupyter geopy descartes python-geohash tqdm geocoder
 ```
 
 ### run

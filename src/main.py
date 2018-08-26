@@ -12,14 +12,16 @@ from lib.DataProvider import user_id
 from lib.DataProvider import sex
 from lib.DataProvider import geometory as geo
 from lib.DataProvider import date
+from lib import mymap
 
 ### files
 # 2013-07-01.csv, 2013-07-07.csv, 2013-10-07.csv,
 # 2013-10-13.csv, 2013-12-16.csv, 2013-12-22.csv
 
-FOLDER = "/home/vagrant/mount_folder/lab/data"
-TEST_CSV = "2013-07-07.csv"
+FOLDER = "/home/vagrant/mount_folder/lab/data/person_trip"
+TEST_FOLDER = ["/home/vagrant/mount_folder/lab/data/person_trip/2013-07-01.csv"]
 MESH_SUFFIX = "_onMesh.csv"
+GEO_JSON = "/home/vagrant/mount_folder/lab/data/geojson/syutoken.geojson"
 SOURCE_PATH = os.path.dirname(os.path.abspath(__file__))
 
 class Main:
@@ -58,12 +60,15 @@ if __name__ == '__main__':
 
   os.chdir(FOLDER)
   
-  for abs_file in utils.file_list(FOLDER):
+  #for abs_file in utils.file_list(FOLDER):
+  for abs_file in TEST_FOLDER:
     print("File: " + abs_file)
     main = Main(abs_file)
-    # df = main.df
-    # byH = main.byH
+    df = main.df
+    byH = main.byH
 
+    print(date.data_by_timerange_on_user_id(df, byH[1], user_id.list(df)))
+    
     # print(sex.rate(df))
 
     # print(geo.mesh_counter(df, byH[0], 1))
