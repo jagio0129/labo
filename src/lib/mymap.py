@@ -2,6 +2,7 @@ import folium
 import geocoder
 import json
 import pandas as pd
+import os
 
 # 緯度経度から市区町村名を取得
 def get_city_form_geocoder(latitude, longitude):
@@ -22,7 +23,7 @@ def geojson_parser(json_path):
   return json.load(f)
 
 # geojsonを反映したmapをhtmlで保存
-def gen_geojson_map(geojson_path):
+def gen_geojson_map(geojson_path, save_path):
   # folium init
   m = folium.Map(
     location=[35.681382,139.76608399999998],
@@ -35,7 +36,8 @@ def gen_geojson_map(geojson_path):
     name="首都圏"
   ).add_to(m)
 
-  m.save('syutoken.html')
+  m.save(os.path.join(save_path, 'syutoken.html'))
+  print("Create html file")
 
 # jsonを整形して表示
 def jprint(data):
