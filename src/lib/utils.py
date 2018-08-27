@@ -11,5 +11,6 @@ def file_list(folder):
   return paths
 
 # ファイル名から日付を取得
+#   return <str(yyyy-mm-dd)>
 def file_date(file):
   return file.split("/")[-1].split(".")[0]

@@ -71,22 +71,24 @@ if __name__ == '__main__':
     main = Main(abs_file)
     df = main.df
     byH = main.byH
+    time_range = 15
 
-    extra_df = date.data_by_timerange_on_user_id(df, byH[15], user_id.list(df))
+    # 指定期間の最初のレコードのみを取得
+    extra_df = date.get_first_data(df, byH[time_range], user_id.list(df))
     extra_df.index = range(1,len(extra_df)+1)
 
     if not os.path.isfile(SOURCE_PATH + "/number_of_city_15.csv"):
       city_dict = defaultdict(int)
       pbar = tqdm(total=len(extra_df))
+      # DataFrame一行ずつループ
       for row in extra_df.itertuples():
-        lat = row.latitude
-        lon = row.longitude
-        city = mymap.get_city_form_geocoder(lat, lon, 0)
-        time.sleep(0.5)
+        # 位置情報から市区町村名を取得
+        city = mymap.get_city_form_geocoder(row.latitude, row.longitude, 0)
         city_dict[city] += 1
         pbar.update(1)
       pbar.close()
 
+      # dict型をDataFrame型にキャスト
       city_df = pd.DataFrame(list(city_dict.items()),columns=['city','number'])
       city_df.to_csv(SOURCE_PATH + "/number_of_city_15.csv")
 

@@ -11,15 +11,15 @@ def gen_by_date(start, periods, freq):
   )
 
 # 指定した時間帯のデータを抽出
-def data_by_timerange(data_frame,date_range):
+def get_term_data(data_frame,date_range):
   # indexをdatetime型に変換
   data_frame.set_index('date', inplace=True)
   # 指定時間範囲のデータを抽出
   return data_frame[str(date_range):str(date_range+1)]
 
 # 指定した時間帯のデータから、一番時間の早いデータだけをユーザごとに抽出
-def data_by_timerange_on_user_id(data_frame, date_range, user_list):
-  df = data_by_timerange(data_frame,date_range)
+def get_first_data(data_frame, date_range, user_list):
+  df = get_term_data(data_frame,date_range)
   all_df = pd.DataFrame()
   # 各user_idの先頭だけ抽出
   for user in user_list:

@@ -2,9 +2,20 @@
 
 import jpgrid
 from tqdm import tqdm
+import geocoder
+import json
+
+# json用整形プリンター
+def jprint(data):
+  print(json.dumps(data, indent=2))
+
+# jsonをパース
+def json_parser(json_path):
+  f = open(json_path,'r')
+  return json.load(f)
 
 # 緯度経度からメッシュコードに換算しdfに追加して返す(1次=4桁、2次=6桁、3次=8桁)
-## return data_frame
+## return <DataFrame>
 def add_meshcode_column(data_frame):
   print("  Calculating mesh code...")
   pbar = tqdm(total=len(data_frame))  # for progress bar
@@ -27,4 +38,17 @@ def mesh_counter(data_frame, time_range, lv):
     return data_frame[h].value_counts()
   else:
     raise "lvの値が不正"
+
+# 緯度経度から市区町村名を取得
+def get_city_form_geocoder(latitude, longitude, cnt):
+  if cnt > 10:
+    raise "cntは10以下の整数を設置"
+  g = geocoder.google([latitude, longitude], method='reverse', language="ja")
+  # Noneが帰ってきたらmax10回まで
+  if not g.city == None:
+    return g.city
+  cnt += 1
+  if cnt == 10:
+    return None
+  return get_city_form_geocoder(latitude, longitude, cnt)
 
