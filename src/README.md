@@ -1,13 +1,13 @@
 ### environment
+ubuntu 16.04
 Python 3.6.5
 
 ### set up 
 ```
-sudo apt-get install apache2
+sudo apt-get install apache2 gdal-bin -y
 sudo add-apt-repository ppa:ubuntugis/ppa && sudo apt-get update
-sudo apt-get install gdal-bin
 pip3 install --user git+https://github.com/geopandas/geopandas/
-pip3 install --user pandas jupyter geopy descartes python-geohash tqdm geocoder
+pip3 install --user pandas jupyter geopy descartes python-geohash tqdm geocoder folium
 ```
 
 ### run

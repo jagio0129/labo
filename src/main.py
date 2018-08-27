@@ -5,6 +5,11 @@ sys.dont_write_bytecode = True
 import pandas as pd
 import time
 import os
+import geocoder
+from collections import defaultdict
+import csv
+import branca
+from tqdm import tqdm
 
 from lib import utils
 from lib.DataProvider import basic
@@ -19,7 +24,7 @@ from lib import mymap
 # 2013-10-13.csv, 2013-12-16.csv, 2013-12-22.csv
 
 FOLDER = "/home/vagrant/mount_folder/lab/data/person_trip"
-TEST_FOLDER = ["/home/vagrant/mount_folder/lab/data/person_trip/2013-07-01.csv"]
+TEST_FOLDER = ["/home/vagrant/mount_folder/lab/data/person_trip/2013-07-07.csv"]
 MESH_SUFFIX = "_onMesh.csv"
 GEO_JSON = "/home/vagrant/mount_folder/lab/data/geojson/syutoken.geojson"
 SOURCE_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -67,11 +72,26 @@ if __name__ == '__main__':
     df = main.df
     byH = main.byH
 
-    print(date.data_by_timerange_on_user_id(df, byH[1], user_id.list(df)))
-    
-    # print(sex.rate(df))
+    extra_df = date.data_by_timerange_on_user_id(df, byH[15], user_id.list(df))
+    extra_df.index = range(1,len(extra_df)+1)
 
-    # print(geo.mesh_counter(df, byH[0], 1))
-    
+    if not os.path.isfile(SOURCE_PATH + "/number_of_city_15.csv"):
+      city_dict = defaultdict(int)
+      pbar = tqdm(total=len(extra_df))
+      for row in extra_df.itertuples():
+        lat = row.latitude
+        lon = row.longitude
+        city = mymap.get_city_form_geocoder(lat, lon, 0)
+        time.sleep(0.5)
+        city_dict[city] += 1
+        pbar.update(1)
+      pbar.close()
+
+      city_df = pd.DataFrame(list(city_dict.items()),columns=['city','number'])
+      city_df.to_csv(SOURCE_PATH + "/number_of_city_15.csv")
+
+    mymap.mygen_geojson_map(GEO_JSON, SOURCE_PATH + "/number_of_city_15.csv", SOURCE_PATH)
+
+
   elapsed_time = time.time() - start
   print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
