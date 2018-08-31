@@ -2,6 +2,7 @@
 
 import re
 import glob
+import json
 
 # 実データ(yyyy-mm-dd.csv)だけを絶対パスのlistで返す
 def file_list(folder):
@@ -14,3 +15,12 @@ def file_list(folder):
 #   return <str(yyyy-mm-dd)>
 def file_date(file):
   return file.split("/")[-1].split(".")[0]
+
+# json用整形プリンター
+def jprint(data):
+  print(json.dumps(data, indent=2))
+
+# jsonをパース
+def json_parser(json_path):
+  f = open(json_path,'r')
+  return json.load(f)

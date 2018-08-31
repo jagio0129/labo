@@ -1,6 +1,7 @@
 import folium
 import pandas as pd
 import os
+import branca
 
 # folium init
 def init_map():
@@ -40,7 +41,7 @@ def choropleth_map(json_path, show_data, save_path):
     line_opacity=0.2,
     key_on='feature.properties.N03_004',
     columns=['city', 'number'],
-    threshold_scale=[0, 3, 5, 7, 100],
+    threshold_scale=[0, 3, 5, 7, 10],
     fill_color='YlOrRd',
     reset=True
   )

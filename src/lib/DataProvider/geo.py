@@ -3,16 +3,9 @@
 import jpgrid
 from tqdm import tqdm
 import geocoder
-import json
-
-# json用整形プリンター
-def jprint(data):
-  print(json.dumps(data, indent=2))
-
-# jsonをパース
-def json_parser(json_path):
-  f = open(json_path,'r')
-  return json.load(f)
+import os
+from collections import defaultdict
+import pandas as pd
 
 # 緯度経度からメッシュコードに換算しdfに追加して返す(1次=4桁、2次=6桁、3次=8桁)
 ## return <DataFrame>
@@ -52,3 +45,22 @@ def get_city_form_geocoder(latitude, longitude, cnt):
     return None
   return get_city_form_geocoder(latitude, longitude, cnt)
 
+# コロプレスマップ用のデータを作成する。
+def gen_chotopleth_data(data_frame, choropleth_data_path):
+  if not os.path.isfile(choropleth_data_path):
+    city_dict = defaultdict(int)
+    pbar = tqdm(total=len(data_frame))
+    # DataFrame一行ずつループ
+    for row in data_frame.itertuples():
+      # 位置情報から市区町村名を取得
+      city = get_city_form_geocoder(row.latitude, row.longitude, 0)
+      city_dict[city] += 1
+      pbar.update(1)
+    pbar.close()
+
+    # dict型をDataFrame型にキャスト
+    city_df = pd.DataFrame(list(city_dict.items()),columns=['city','number'])
+    # データをcsvファイルとして出力
+    city_df.to_csv(choropleth_data_path)
+  else:
+    print("Skip create " + choropleth_data_path)
