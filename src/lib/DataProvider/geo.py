@@ -48,6 +48,7 @@ def get_city_form_geocoder(latitude, longitude, cnt):
 # コロプレスマップ用のデータを作成する。
 def gen_chotopleth_data(data_frame, choropleth_data_path):
   if not os.path.isfile(choropleth_data_path):
+    print("Create " + choropleth_data_path)
     city_dict = defaultdict(int)
     pbar = tqdm(total=len(data_frame))
     # DataFrame一行ずつループ
@@ -64,3 +65,19 @@ def gen_chotopleth_data(data_frame, choropleth_data_path):
     city_df.to_csv(choropleth_data_path)
   else:
     print("Skip create " + choropleth_data_path)
+
+# メッシュコードを追加した新規CSVファイルを生成する。
+#   return <DataFrame>
+def gen_mesh_csv(abs_file, folder):
+  suffix = "_onMesh.csv"
+  file = os.path.basename(abs_file)
+  root, ext = os.path.splitext(file)
+  new_file = folder + "/" + root + suffix
+  if os.path.isfile(new_file):
+    print("Skip create " + new_file)
+    return pd.read_csv(new_file)
+  else:
+    print("Create " + new_file)
+    df = pd.read_csv(abs_file)
+    df = add_meshcode_column(df)
+    return df.to_csv(new_file, index=False)
