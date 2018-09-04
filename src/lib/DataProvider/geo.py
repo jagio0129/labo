@@ -6,6 +6,9 @@ import geocoder
 import os
 from collections import defaultdict
 import pandas as pd
+from lib import utils
+from shapely.geometry import shape, Point
+import time
 
 # 緯度経度からメッシュコードに換算しdfに追加して返す(1次=4桁、2次=6桁、3次=8桁)
 ## return <DataFrame>
@@ -46,7 +49,7 @@ def get_city_form_geocoder(latitude, longitude, cnt):
   return get_city_form_geocoder(latitude, longitude, cnt)
 
 # コロプレスマップ用のデータを作成する。
-def gen_chotopleth_data(data_frame, choropleth_data_path):
+def gen_chotopleth_data(data_frame, choropleth_data_path, geo_json):
   if not os.path.isfile(choropleth_data_path):
     print("Create " + choropleth_data_path)
     city_dict = defaultdict(int)
@@ -54,7 +57,8 @@ def gen_chotopleth_data(data_frame, choropleth_data_path):
     # DataFrame一行ずつループ
     for row in data_frame.itertuples():
       # 位置情報から市区町村名を取得
-      city = get_city_form_geocoder(row.latitude, row.longitude, 0)
+      json = utils.json_parser(geo_json)
+      city = isContains(json, row.latitude, row.longitude)
       city_dict[city] += 1
       pbar.update(1)
     pbar.close()
@@ -81,3 +85,12 @@ def gen_mesh_csv(abs_file, folder):
     df = pd.read_csv(abs_file)
     df = add_meshcode_column(df)
     return df.to_csv(new_file, index=False)
+
+# 任意の位置情報がどの市区町村に属するか判定するメソッド
+def isContains(json, lat, lon):
+  point = Point(lon, lat)
+  for feature in json['features']:
+    polygon = shape(feature['geometry'])
+    if polygon.contains(point):
+        return feature['properties']['N03_004']
+  return None

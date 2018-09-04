@@ -26,6 +26,7 @@ TEST_FOLDER = ["/home/vagrant/mount_folder/lab/data/person_trip/2013-07-01.csv"]
 GEO_JSON = "/home/vagrant/mount_folder/lab/data/geojson/syutoken.geojson"
 SOURCE_PATH = os.path.dirname(os.path.abspath(__file__))
 CHOROPLETH_DATA = SOURCE_PATH + "/number_of_city_15.csv"
+TIME_RANGE = 11
 
 def initializer(abs_file):
   # メッシュコードを追加したDataFrameをロード
@@ -54,18 +55,15 @@ if __name__ == '__main__':
   for abs_file in TEST_FOLDER:  # テスト用
     print("File: " + abs_file)
     df, byH = initializer(abs_file)
-    time_range = 1
     
     # 指定期間の最初のレコードのみを取得
-    extra_df = date.get_first_data(df, byH[time_range], user.user_list(df))
+    extra_df = date.get_first_data(df, byH[TIME_RANGE], user.user_list(df))
+    # インデックスをintに変更
     extra_df.index = range(1,len(extra_df)+1)
-
     # コロプレスマップ用のデータを作成
-    geo.gen_chotopleth_data(extra_df, CHOROPLETH_DATA)
-
+    geo.gen_chotopleth_data(extra_df, CHOROPLETH_DATA, GEO_JSON)
     # コロプレスマップを表示するHTMLファイルの作成
     mymap.my_choropleth_map(GEO_JSON, CHOROPLETH_DATA, SOURCE_PATH)
-
 
   elapsed_time = time.time() - start
   print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
