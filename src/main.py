@@ -58,8 +58,6 @@ if __name__ == '__main__':
     
     # 指定期間の最初のレコードのみを取得
     extra_df = date.get_first_data(df, byH[TIME_RANGE], user.user_list(df))
-    # インデックスをintに変更
-    extra_df.index = range(1,len(extra_df)+1)
     # コロプレスマップ用のデータを作成
     geo.gen_chotopleth_data(extra_df, CHOROPLETH_DATA, GEO_JSON)
     # コロプレスマップを表示するHTMLファイルの作成
