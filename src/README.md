@@ -24,7 +24,6 @@ ogr2ogr -f GeoJSON -append <結合されるファイル> <結合するファイ�
 ### mapデータの確認
 ```
 python3 plot_map.py
-sudo mv syutoken.html /var/www/html/
 ```
 
-ブラウザから`localhost/syutoken.html`にアクセス
+ブラウザから`localhost/cgi-bin/index.rb`にアクセス
