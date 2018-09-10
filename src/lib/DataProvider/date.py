@@ -19,7 +19,7 @@ def get_term_data(data_frame,date_range):
 # 指定した時間帯のデータから、一番時間の早いデータだけをユーザごとに抽出
 ##  指定した時間帯のデータがない場合は、一番近い時間帯のデータを抽出する
 def get_first_data(data_frame, date_range, user_list):
-  print("Extra date range data")
+  print("Extra "+ str(date_range) + " ~ " + str(date_range + 1) + " data")
   # indexをdatetime型に変換
   data_frame.set_index('date', inplace=True)
   

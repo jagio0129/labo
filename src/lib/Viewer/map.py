@@ -51,32 +51,32 @@ def choropleth_map(json_path, show_data, save_path):
 
 # コロプレスマップを表示するHTMLファイルの作成。
 def my_choropleth_map(geojson_path, show_data, save_path):
-  print("Create Choropleth Map")
-  noc_df = pd.read_csv(show_data, na_values=[' '])
+  if not os.path.isfile(save_path):
+    print("Create Choropleth Map: " + save_path)
+    noc_df = pd.read_csv(show_data, na_values=[' '])
 
-  colorscale = branca.colormap.linear.PuRd_09.scale(0, 10)
-  population_series = noc_df.set_index('city')['number']
+    colorscale = branca.colormap.linear.PuRd_09.scale(0, 100)
+    population_series = noc_df.set_index('city')['number']
 
-  # GeoJsonの表示形式の設定
-  def style_function(feature):
-    population = population_series.get(str(feature['properties']['N03_004']), None)
-    return {
-      'fillOpacity': 0.7,
-      'weight': 0,
-      'fillColor': '#yellow' if population is None else colorscale(population)
-    }
+    # GeoJsonの表示形式の設定
+    def style_function(feature):
+      population = population_series.get(str(feature['properties']['N03_004']), None)
+      return {
+        'fillOpacity': 0.7,
+        'weight': 0,
+        'fillColor': '#yellow' if population is None else colorscale(population)
+      }
 
-  # folium init
-  m = init_map()
+    # folium init
+    m = init_map()
 
-  # add geojson
-  folium.GeoJson(
-    geojson_path,
-    name="首都圏",
-    style_function=style_function
-  ).add_to(m)
+    # add geojson
+    folium.GeoJson(
+      geojson_path,
+      name="首都圏",
+      style_function=style_function
+    ).add_to(m)
 
-  folium.LayerControl().add_to(m)
-  m.save(os.path.join(save_path, 'choropleth2.html'))
-  print("Created")
-
+    folium.LayerControl().add_to(m)
+    m.save(save_path)
+    print("Created")

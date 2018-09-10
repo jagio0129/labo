@@ -53,11 +53,12 @@ def gen_chotopleth_data(data_frame, choropleth_data_path, geo_json):
   if not os.path.isfile(choropleth_data_path):
     print("Create " + choropleth_data_path)
     city_dict = defaultdict(int)
-    pbar = tqdm(total=len(data_frame))
+    json = utils.json_parser(geo_json)
+    
     # DataFrame一行ずつループ
+    pbar = tqdm(total=len(data_frame))
     for row in data_frame.itertuples():
       # 位置情報から市区町村名を取得
-      json = utils.json_parser(geo_json)
       city = isContains(json, row.latitude, row.longitude)
       city_dict[city] += 1
       pbar.update(1)
