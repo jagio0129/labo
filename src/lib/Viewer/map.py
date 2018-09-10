@@ -55,7 +55,7 @@ def my_choropleth_map(geojson_path, show_data, save_path):
     print("Create Choropleth Map: " + save_path)
     noc_df = pd.read_csv(show_data, na_values=[' '])
 
-    colorscale = branca.colormap.linear.PuRd_09.scale(0, 100)
+    colorscale = branca.colormap.linear.PuRd_09.scale(0, 500)
     population_series = noc_df.set_index('city')['number']
 
     # GeoJsonの表示形式の設定

@@ -25,7 +25,7 @@ from lib.Viewer import map as mymap
 ROOT_PATH = "/home/vagrant/mount_folder/lab"
 DATA_PATH = ROOT_PATH + "/data"
 PERSON_TRIP = DATA_PATH + "/person_trip"
-CHOROPLETH = DATA_PATH + "/choropleth"
+CHOROPLETH = DATA_PATH + "/choropleth/data"
 GEO_JSON = DATA_PATH + "/geojson/syutoken.geojson"
 SOURCE_PATH = os.path.dirname(os.path.abspath(__file__))
 
