@@ -33,8 +33,9 @@ SOURCE_PATH = os.path.dirname(os.path.abspath(__file__))
 TEST_FOLDER = [PERSON_TRIP + "/2013-07-01.csv"]
 
 def initializer(abs_file):
-  # メッシュコードを追加したDataFrameをロード
-  df = geo.gen_mesh_csv(abs_file, PERSON_TRIP)
+  # csvファイルをDataFrameとしてロード
+  df = pd.read_csv(abs_file)
+  """
   # 時間をdatetime型にキャスト
   df['date'] = pd.to_datetime(df['date'])
 
@@ -47,7 +48,8 @@ def initializer(abs_file):
   )
 
   return df, byH
-
+  """
+  return df
 
 ### main
 if __name__ == '__main__':
@@ -55,12 +57,13 @@ if __name__ == '__main__':
 
   os.chdir(PERSON_TRIP)
   
-  # for abs_file in utils.file_list(PERSON_TRIP): # 実データ用
-  for abs_file in TEST_FOLDER:  # テスト用
+  for abs_file in utils.file_list(PERSON_TRIP): # 実データ用
+  # for abs_file in TEST_FOLDER:  # テスト用
     print("File: " + abs_file)
-    df, byH = initializer(abs_file)
+    # df, byH = initializer(abs_file)
+    df = initializer(abs_file)
 
-    print(fc.facility_list(df))
+    print(fc.facility_rate(df))
 
     
   elapsed_time = time.time() - start
