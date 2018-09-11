@@ -16,6 +16,7 @@ from lib import utils
 from lib.DataProvider import user
 from lib.DataProvider import geo
 from lib.DataProvider import date
+from lib.DataProvider import facility as fc
 from lib.Viewer import map as mymap
 
 ### files
@@ -59,20 +60,8 @@ if __name__ == '__main__':
     print("File: " + abs_file)
     df, byH = initializer(abs_file)
 
-    for v in byH:
-      tmp_df = copy.deepcopy(df)
-      v_sft = v.strftime("%Y-%m-%d_%H-%M-%S")
-      data = CHOROPLETH + "/" + str(v_sft) + ".csv" 
-      save_path = SOURCE_PATH + "/choropleth-" + str(v_sft) + ".html" 
-      
-      # 指定期間の最初のレコードのみを取得
-      extra_df = ""
-      if not os.path.isfile(data):
-        extra_df = date.get_first_data(tmp_df, v, user.user_list(tmp_df))
-      # コロプレスマップ用のデータを作成
-      geo.gen_chotopleth_data(extra_df, data, GEO_JSON)
-      # コロプレスマップを表示するHTMLファイルの作成
-      mymap.my_choropleth_map(GEO_JSON, data, save_path)
+    print(fc.facility_list(df))
 
+    
   elapsed_time = time.time() - start
   print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
