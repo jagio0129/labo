@@ -7,23 +7,21 @@ def user_list(data_frame):
   return data_frame['user_id'].unique()
 
 # 存在しないuser_idの一覧を表示する
-#   return <dict>
-def show_not_exist(data_frame):
+#   return <dict> user_list, <int> user_number
+def not_exist(data_frame):
   ul = user_list(data_frame)
   ul.sort()
 
   i = 0
-  num = []
+  users = []
   for id in ul:
     if not (i in ul):
       while (i != int(id)):
-        num.append(i)
+        users.append(i)
         i += 1
     i += 1
-  print("No exist UserID:")
-  print(num)
-  print("Size: %d" % len(num))
-
+  return users, len(users)
+  
 # 指定ユーザの最初と最後のレコードだけのデータフレームを返す
 #   return <DataFrame>
 def get_start_end(data_frame, user_id):
