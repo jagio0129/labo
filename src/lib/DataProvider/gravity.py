@@ -15,4 +15,8 @@ def dist_on_sphere(pos0, pos1, radious=earth_rad):
     xyz0, xyz1 = latlng_to_xyz(*pos0), latlng_to_xyz(*pos1)
     return acos(sum(x * y for x, y in zip(xyz0, xyz1)))*radious
 
+# グラビティモデルの式
+def fomula(popA, popB, distAB):
+  g = 1   # 何かしらのパラメータ
+  f = g * (popA * popB) / distAB
 
