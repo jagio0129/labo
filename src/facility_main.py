@@ -23,7 +23,7 @@ from lib.Viewer import map as mymap
 # 2013-07-01.csv, 2013-07-07.csv, 2013-10-07.csv,
 # 2013-10-13.csv, 2013-12-16.csv, 2013-12-22.csv
 
-ROOT_PATH = "/home/ryouta/lab"
+ROOT_PATH = "/home/vagrant/mount_folder/lab"
 DATA_PATH = ROOT_PATH + "/data"
 PERSON_TRIP = DATA_PATH + "/person_trip"
 CHOROPLETH = DATA_PATH + "/choropleth"
