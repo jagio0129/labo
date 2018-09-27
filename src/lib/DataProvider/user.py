@@ -34,10 +34,19 @@ def get_start_end(data_frame, user_id):
 #   return <DataFrame>
 def get_start_end_and_stay(data_frame, user_id):
   user_df = data_frame[data_frame['user_id'] == user_id]
+
+  # レコードのheadを取得
   start = user_df.head(1)
+  # 状態がSTAYのレコードを取得
   stay = user_df[user_df['status'] == "STAY"]
+  # レコードのtailを取得
   end = user_df.tail(1)
-  return pd.concat([start,stay,end])
+  
+  # 上記３つを結合
+  user_df = pd.concat([start,stay,end])
+  # 重複レコードを削除
+  od_df = user_df[~user_df.duplicated()]
+  return od_df
 
 # sexの種類を返す
 #   return <dict>
