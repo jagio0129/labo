@@ -24,3 +24,8 @@ def jprint(data):
 def json_parser(json_path):
   f = open(json_path,'r')
   return json.load(f)
+
+# jsonファイルの作成
+def write_json(json_data, save_path):
+  fw = open(save_path,'w')
+  json.dump(json_data,fw)

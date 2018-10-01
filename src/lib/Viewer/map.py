@@ -22,32 +22,32 @@ def geojson_map(geojson_path, save_path):
     name="首都圏"
   ).add_to(m)
 
-  m.save(os.path.join(save_path, 'geo_json.html'))
+  m.save(save_path)
   print("Created")
 
 # コロプレスマップを表示するHTMLファイルの作成。
 # NOTE: None値の処理がないので、そのままだとデータのない部分は
 #       一番濃い色で塗られてしまい、データが正しく表現できない。
-def choropleth_map(json_path, show_data, save_path):
+def choropleth_map(geojson_path, show_data, save_path):
   noc_df = pd.read_csv(show_data)
 
   m = init_map()
 
   m.choropleth(
-    geo_data=json_path,
+    geo_data=geojson_path,
     name='choropleth',
     data=noc_df,
     fill_opacity=0.7,
     line_opacity=0.2,
     key_on='feature.properties.N03_004',
     columns=['city', 'number'],
-    threshold_scale=[0, 3, 5, 7, 10],
-    fill_color='YlOrRd',
+    threshold_scale=[10, 30, 50, 70, 90, 110],
+    fill_color='PuBuGn',
     reset=True
   )
 
   folium.LayerControl().add_to(m)
-  m.save(os.path.join(save_path, 'choropleth.html'))
+  m.save(save_path)
 
 # コロプレスマップを表示するHTMLファイルの作成。
 def my_choropleth_map(geojson_path, show_data, save_path):
