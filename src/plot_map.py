@@ -38,7 +38,7 @@ def mk_filnename(time_name):
 
   t_str = time_name.strftime("%Y-%m-%d_%H-%M-%S")
   choropleth_data = CHOROPLETH_DATA + "/" + str(t_str) + ".csv"
-  save_path = SOURCE_PATH + "/choropleth-" + str(t_str) + ".html" 
+  save_path = CHOROPLETH_HTML + "/choropleth-" + str(t_str) + ".html" 
 
   return choropleth_data, save_path
 
