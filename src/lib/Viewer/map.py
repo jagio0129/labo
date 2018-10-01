@@ -1,7 +1,7 @@
 import folium
 import pandas as pd
-import os
-import branca
+# import os
+# import branca
 
 # folium init
 def init_map():
@@ -49,6 +49,7 @@ def choropleth_map(geojson_path, show_data, save_path):
   folium.LayerControl().add_to(m)
   m.save(save_path)
 
+"""
 # コロプレスマップを表示するHTMLファイルの作成。
 def my_choropleth_map(geojson_path, show_data, save_path):
   if not os.path.isfile(save_path):
@@ -80,3 +81,4 @@ def my_choropleth_map(geojson_path, show_data, save_path):
     folium.LayerControl().add_to(m)
     m.save(save_path)
     print("Created")
+"""

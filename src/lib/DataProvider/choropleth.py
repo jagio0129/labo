@@ -33,17 +33,9 @@ def gen_chotopleth_data(data_frame, choropleth_data_path, geo_json_path):
   else:
     print("Skip create " + choropleth_data_path)
 
-# 任意の位置情報がどの市区町村に属するか判定するメソッド
-def belong(json, lat, lon):
-  point = Point(lon, lat)
-  for feature in json['features']:
-    polygon = shape(feature['geometry'])
-    if polygon.contains(point):
-        return feature['properties']['N03_004']
-  return None
-
 # choropleth dataに含まれるgeo_jsonだけを抽出
-def choropelth_json(geo_json_path, choropleth_data_path):
+def gen_choropleth_json(geo_json_path, choropleth_data_path):
+  print("create choropleth GeoJSON ...")
   
   geo_json = utils.json_parser(geo_json_path)
   df = pd.read_csv(choropleth_data_path)
@@ -55,8 +47,6 @@ def choropelth_json(geo_json_path, choropleth_data_path):
         city_ary.append(feature)
         break
 
-
-
   j = {
     "type": "FeatureCollection",
     "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::6668" }},
@@ -65,3 +55,11 @@ def choropelth_json(geo_json_path, choropleth_data_path):
   
   return j
 
+# 任意の位置情報がどの市区町村に属するか判定するメソッド
+def belong(json, lat, lon):
+  point = Point(lon, lat)
+  for feature in json['features']:
+    polygon = shape(feature['geometry'])
+    if polygon.contains(point):
+        return feature['properties']['N03_004']
+  return None
