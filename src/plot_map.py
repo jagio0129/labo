@@ -27,8 +27,8 @@ from lib.DataProvider import choropleth
 ROOT_PATH       = "/home/vagrant/mount_folder/lab"
 DATA_PATH       = ROOT_PATH + "/data"
 PERSON_TRIP     = DATA_PATH + "/person_trip"
-CHOROPLETH_DATA = DATA_PATH + "/choropleth_data"
-CHOROPLETH_HTML = DATA_PATH + "/choropleth_html"
+CHOROPLETH_DATA = DATA_PATH + "/choropleth/data"
+CHOROPLETH_HTML = DATA_PATH + "/choropleth/html"
 GEO_JSON        = DATA_PATH + "/geojson/syutoken.geojson"
 SOURCE_PATH     = os.path.dirname(os.path.abspath(__file__))
 

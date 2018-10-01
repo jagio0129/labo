@@ -33,6 +33,7 @@ def get_start_end(data_frame, user_id):
 # 指定ユーザの最初と最後のレコードに加えて、STAY状態のデータフレームを返す
 #   return <DataFrame>
 def get_start_end_and_stay(data_frame, user_id):
+  
   user_df = data_frame[data_frame['user_id'] == user_id]
 
   # レコードのheadを取得

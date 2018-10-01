@@ -4,8 +4,8 @@ import os
 from tqdm import tqdm
 import pandas as pd
 from collections import defaultdict
-from shapely.geometry import shape, Point
 from lib import utils
+from lib.DataProvider import geo
 import time
 import json
 
@@ -21,7 +21,7 @@ def gen_chotopleth_data(data_frame, choropleth_data_path, geo_json_path):
     pbar = tqdm(total=len(data_frame))
     for row in data_frame.itertuples():
       # 位置情報から市区町村名を取得
-      city = belong(geo_json, row.latitude, row.longitude)
+      city = geo.belong(geo_json, row.latitude, row.longitude)
       city_dict[city] += 1
       pbar.update(1)
     pbar.close()
@@ -54,12 +54,3 @@ def gen_choropleth_json(geo_json_path, choropleth_data_path):
   }
   
   return j
-
-# 任意の位置情報がどの市区町村に属するか判定するメソッド
-def belong(json, lat, lon):
-  point = Point(lon, lat)
-  for feature in json['features']:
-    polygon = shape(feature['geometry'])
-    if polygon.contains(point):
-        return feature['properties']['N03_004']
-  return None

@@ -5,6 +5,7 @@ from tqdm import tqdm
 import geocoder
 import os
 from collections import defaultdict
+from shapely.geometry import shape, Point
 import pandas as pd
 from lib import utils
 import time
@@ -63,3 +64,11 @@ def gen_mesh_csv(abs_file, folder):
     df = add_meshcode_column(df)
     return df.to_csv(new_file, index=False)
 
+# 任意の位置情報がどの市区町村に属するか判定するメソッド
+def belong(geo_json, lat, lon):
+  point = Point(lon, lat)
+  for feature in geo_json['features']:
+    polygon = shape(feature['geometry'])
+    if polygon.contains(point):
+        return feature['properties']['N03_004']
+  return None
