@@ -62,23 +62,23 @@ if __name__ == '__main__':
     )
 
     # 一時間ごとに以下を実行
-    # for v in byH:
-    v = byH[1] # テスト用
-    choropleth_data, save_path = mk_filnename(v)
-    
-    # 指定期間の最初の
-    # レコードのみを取得
-    tmp_df = copy.deepcopy(df)
-    extra_df = ""
-    if not os.path.isfile(choropleth_data):
-      extra_df = date.get_first_data(tmp_df, v, user.user_list(tmp_df))
-    
-    # コロプレスマップ用のデータを作成
-    choropleth.gen_chotopleth_data(extra_df, choropleth_data, GEO_JSON)
-    # コロプレスマップ用のgeojsonデータの作成
-    geo_json = choropleth.gen_choropleth_json(GEO_JSON,choropleth_data)
-    # コロプレスマップの作成
-    mymap.choropleth_map(geo_json,choropleth_data, save_path)
+    for v in byH:
+    # v = byH[1] # テスト用
+      choropleth_data, save_path = mk_filnename(v)
+      
+      # 指定期間の最初の
+      # レコードのみを取得
+      tmp_df = copy.deepcopy(df)
+      extra_df = ""
+      if not os.path.isfile(choropleth_data):
+        extra_df = date.get_first_data(tmp_df, v, user.user_list(tmp_df))
+      
+      # コロプレスマップ用のデータを作成
+      choropleth.gen_chotopleth_data(extra_df, choropleth_data, GEO_JSON)
+      # コロプレスマップ用のgeojsonデータの作成
+      geo_json = choropleth.gen_choropleth_json(GEO_JSON,choropleth_data)
+      # コロプレスマップの作成
+      mymap.choropleth_map(geo_json,choropleth_data, save_path)
 
   elapsed_time = time.time() - start
   print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
