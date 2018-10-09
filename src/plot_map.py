@@ -5,32 +5,25 @@ sys.dont_write_bytecode = True
 import pandas as pd
 import time
 import os
-import geocoder
-from collections import defaultdict
-import csv
-import branca
 from tqdm import tqdm
 import copy
-import json
 
 from lib import utils
 from lib.DataProvider import user
-from lib.DataProvider import geo
 from lib.DataProvider import date
 from lib.Viewer import map as mymap
 from lib.DataProvider import choropleth
 
-### files
-# 2013-07-01.csv, 2013-07-07.csv, 2013-10-07.csv,
-# 2013-10-13.csv, 2013-12-16.csv, 2013-12-22.csv
+SOURCE_PATH = os.path.dirname(os.path.abspath(__file__))
 
-ROOT_PATH       = "/home/vagrant/mount_folder/lab"
-DATA_PATH       = ROOT_PATH + "/data"
-PERSON_TRIP     = DATA_PATH + "/person_trip"
-CHOROPLETH_DATA = DATA_PATH + "/choropleth/data"
-CHOROPLETH_HTML = DATA_PATH + "/choropleth/html"
-GEO_JSON        = DATA_PATH + "/geojson/syutoken.geojson"
-SOURCE_PATH     = os.path.dirname(os.path.abspath(__file__))
+c = configparser.ConfigParser()
+c.read(SOURCE_PATH + '/config.ini')
+c = c["DEFAULT"]
+
+PERSON_TRIP = c["PERSON_TRIP"]
+GEO_JSON    = c["GEO_JSON"]
+CHOROPLETH_DATA    = c["CHOROPLETH_DATA"]
+CHOROPLETH_HTML    = c["CHOROPLETH_HTML"]
 
 TEST_FOLDER = [PERSON_TRIP + "/2013-07-01.csv"]
 

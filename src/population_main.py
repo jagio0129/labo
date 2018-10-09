@@ -5,23 +5,22 @@ sys.dont_write_bytecode = True
 import pandas as pd
 import time
 import os
-import csv
-from tqdm import tqdm
 import codecs
 
 from lib import utils
 
-### files
-# 2013-07-01.csv, 2013-07-07.csv, 2013-10-07.csv,
-# 2013-10-13.csv, 2013-12-16.csv, 2013-12-22.csv
-
-ROOT_PATH = "/home/vagrant/mount_folder/lab"
-DATA_PATH = ROOT_PATH + "/data"
-POPULATION_PATH = DATA_PATH + "/population"
-ORIGIN_DATA = POPULATION_PATH + "/population_2015.csv"
-SAVE_PATH = POPULATION_PATH + "/population.csv"
-GEO_JSON = DATA_PATH + "/geojson/syutoken.geojson"
 SOURCE_PATH = os.path.dirname(os.path.abspath(__file__))
+
+c = configparser.ConfigParser()
+c.read(SOURCE_PATH + '/config.ini')
+c = c["DEFAULT"]
+
+PERSON_TRIP             = c["PERSON_TRIP"]
+GEO_JSON                = c["GEO_JSON"]
+POPULATION_ORIGIN_DATA  = c["POPULATION_ORIGIN_DATA"]
+POPULATION_SAVE_PATH    = c["POPULATION_SAVE_PATH"]
+
+TEST_DATA = [c["TEST_DATA"]]
 
 ### main
 if __name__ == '__main__':
@@ -31,12 +30,12 @@ if __name__ == '__main__':
   geo_json = utils.json_parser(GEO_JSON)
 
   # csvファイルをDataFrameとしてロード
-  with codecs.open(ORIGIN_DATA, "r", "Shift-JIS", "ignore") as file:
+  with codecs.open(POPULATION_ORIGIN_DATA, "r", "Shift-JIS", "ignore") as file:
     df = pd.read_table(file, delimiter=",")
 
     area_stack = []
     # csvファイルの作成
-    with open(SAVE_PATH, 'w') as csv_file:
+    with open(POPULATION_SAVE_PATH, 'w') as csv_file:
       writer = csv.DictWriter(csv_file, fieldnames=['city', 'population'])
       writer.writeheader()
       
