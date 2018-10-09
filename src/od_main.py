@@ -8,6 +8,7 @@ import os
 import configparser
 
 from lib import utils
+from lib.DataProvider import user
 
 SOURCE_PATH = os.path.dirname(os.path.abspath(__file__))
 
@@ -29,7 +30,10 @@ if __name__ == '__main__':
     # csvファイルをDataFrameとしてロード
     df = pd.read_csv(abs_file)
 
-    print(user.get_start_end_and_stay(df, 2000))
+    for u in user.user_list(df):
+      print(u)
+      print(user.get_start_end_and_stay(df, u))
+      
 
   elapsed_time = time.time() - start
   print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
