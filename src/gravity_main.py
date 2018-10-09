@@ -27,7 +27,7 @@ if __name__ == '__main__':
   start = time.time()
 
   # for abs_file in utils.file_list(PERSON_TRIP): # 実データ用
-  for abs_file in TEST_FOLDER:  # テスト用
+  for abs_file in TEST_DATA:  # テスト用
 
     # csvファイルをDataFrameとしてロード
     df = pd.read_csv(abs_file)
