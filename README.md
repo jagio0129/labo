@@ -1,27 +1,32 @@
-## 各スクリプトの概要
-### facility_main.py
-各施設にどのくらいのユーザが立ち寄るかを取得できる
+## ディレクトリ概要
 
-### gravity_main.py
-データをグラビティモデルに適応する
+### data
 
-## od_main.py
-ユーザがどこからどこへ行くのかを取得する
+分析に使う各データを配置。以下のような配置になっている。
 
-## plot_main.py
-流動データやGeoJSONなどをマップにプロットする。
+- choropleth
+- geojson
+- od_data
+- person_trip
+- population
+- puboffice
 
-## population_main.py
-国税調査データから該当する地域の人口だけを抽出
+### doc
 
+- img
+  - スクショなどの画像
+- cgi.md
+  - cgiを設定する手順
+- data.xlsx
+  - データの概要
+- Geojson.md
+  - Geojsonの説明
+- Gravity_Model.md
+  - グラビティモデルの説明
+- index.rb
+  - cgi用スクリプト
+- mesh_code.md
+  - 地域メッシュの説明
 
-## データの設置
-Google Driveのデータをdata配下に設置する
-
-## config
-```
-cp config.ini.skeleton config.ini
-```
-
-## cgiスクリプトの設置
-`/usr/lib/cgi-bin`にindex.rbを設置する
+### src
+データ解析用のスクリプト
