@@ -24,3 +24,12 @@ def jprint(data):
 def json_parser(json_path):
   f = open(json_path,'r')
   return json.load(f)
+
+# 処理の概要をdumpする
+def dump_description(destination):
+  hash_str = ""
+  for i in range(len(destination)+4):
+    hash_str += "#"
+  print(hash_str)
+  print("# %s #" % destination)
+  print(hash_str)

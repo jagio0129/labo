@@ -29,6 +29,9 @@ OD_PATH     = c["OD_PATH"]
 if __name__ == '__main__':
   start = time.time()
 
+  # スクリプトの概要をdump
+  utils.dump_description("Create Origin-Destination CSV file.")
+  
   geo_json = utils.json_parser(GEO_JSON)
   od_counter = defaultdict(int)     # ODをカウントするためのdict
 
@@ -67,12 +70,15 @@ if __name__ == '__main__':
     # CSVファイルとして保存する
     date_name = utils.file_date(abs_file)
     outpath = OD_PATH + "/od-" + date_name + ".csv" # save path
-    header = ['OD', 'count']          # csv header
+    header = ['origin', 'destination', 'count']     # csv header
+
+    print("Create " + outpath)
     with open(outpath,'w') as f:
       w = csv.writer(f)
       w.writerow(header) # ヘッダーを書き込む
       for key in od_counter.keys():
-        f.write("%s,%s\n"%(key,od_counter[key]))
-      
+        od_ary = key.split("=>")
+        f.write("%s,%s,%s\n"%(od_ary[0],od_ary[1],od_counter[key]))
+        
   elapsed_time = time.time() - start
   print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
