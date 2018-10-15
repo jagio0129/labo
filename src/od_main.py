@@ -55,30 +55,32 @@ if __name__ == '__main__':
         next_df = od_df.iloc[1]
         
         # 緯度経度から市区町村名を取得
-        orgin_city = geo.belong(geo_json, orgin_df["latitude"], orgin_df["longitude"])
-        next_city = geo.belong(geo_json, next_df["latitude"], next_df["longitude"])
-
+        orgin_city, orgin_city_id = geo.belong(geo_json, orgin_df["latitude"], orgin_df["longitude"])
+        dest_city, dest_city_id = geo.belong(geo_json, next_df["latitude"], next_df["longitude"])
+        
         # 同市区町村なら処理しない
-        if orgin_city == next_city:
+        if orgin_city == dest_city:
           continue
 
         # ODをカウント
-        od_counter[str(orgin_city) + "=>" + str(next_city)] += 1
+        od_counter[str(orgin_city) + ":" + str(orgin_city_id) + "=>" + str(dest_city) + ":" + str(dest_city_id)] += 1
       pbar.update(1)
     pbar.close()
 
     # CSVファイルとして保存する
     date_name = utils.file_date(abs_file)
     outpath = OD_PATH + "/od-" + date_name + ".csv" # save path
-    header = ['origin', 'destination', 'count']     # csv header
+    header = ['origin', 'destination', 'origin_id', 'destination_id', 'count']     # csv header
 
     print("Create " + outpath)
     with open(outpath,'w') as f:
       w = csv.writer(f)
       w.writerow(header) # ヘッダーを書き込む
       for key in od_counter.keys():
-        od_ary = key.split("=>")
-        f.write("%s,%s,%s\n"%(od_ary[0],od_ary[1],od_counter[key]))
+        od_city_ary = key.split("=>")
+        origin = od_city_ary[0].split(":")
+        destination = od_city_ary[1].split(":")
+        f.write("%s,%s,%s,%s,%s\n"%(origin[0],destination[0],origin[1],destination[1],od_counter[key]))
         
   elapsed_time = time.time() - start
   print("elapsed_time:{0}".format(elapsed_time) + "[sec]")

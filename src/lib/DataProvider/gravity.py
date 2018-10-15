@@ -12,6 +12,8 @@ def __latlng_to_xyz(lat, lng):
 # ２点間の距離[km]をを返す
 ## return float
 def dist_on_sphere(pos0, pos1, radious=earth_rad):
+  if (str(None) in pos0) or (str(None) in pos1):
+    return None
   xyz0, xyz1 = __latlng_to_xyz(*pos0), __latlng_to_xyz(*pos1)
   return acos(sum(x * y for x, y in zip(xyz0, xyz1)))*radious
 
