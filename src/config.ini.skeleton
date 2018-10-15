@@ -6,6 +6,7 @@ CHOROPLETH_DATA         = %(DATA_PATH)s/choropleth/data
 CHOROPLETH_HTML         = %(DATA_PATH)s/choropleth/html
 GEO_JSON                = %(DATA_PATH)s/geojson/syutoken.geojson
 OD_PATH                 = %(DATA_PATH)s/od_data
+PUBOFFICE_PATH          = %(DATA_PATH)s/puboffice/h2905puboffice_utf8.csv
 POPULATION_PATH         = %(DATA_PATH)s/population
 POPULATION_ORIGIN_DATA  = %(POPULATION_PATH)s/population_2015.csv
 POPULATION_SAVE_PATH    = %(POPULATION_PATH)s/population.csv
