@@ -25,3 +25,19 @@ def fomula(popA, popB, distAB):
 
   return f
 
+# グラビティモデルのパラメータGを算出する
+#   args
+#     amount = 移動量, popA, popB = 人口, distAB = ２点間距離
+def param_fomuola(amount, popA, popB, distAB):
+  if((amount is None) or (popA is None) or (popB is None) or (distAB is None)):
+    raise "NoneError"
+  if((amount == 0) or (popA == 0) or (popB ==0) or (distAB == 0)):
+    raise "ZeroError"
+
+  devided  = float(amount)
+  devide = float(popA) * float(popB) * float(distAB)
+  
+  g = devided / devide
+  return g
+  
+
