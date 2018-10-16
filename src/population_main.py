@@ -6,6 +6,8 @@ import pandas as pd
 import time
 import os
 import codecs
+import configparser
+import csv
 
 from lib import utils
 
@@ -20,11 +22,14 @@ GEO_JSON                = c["GEO_JSON"]
 POPULATION_ORIGIN_DATA  = c["POPULATION_ORIGIN_DATA"]
 POPULATION_SAVE_PATH    = c["POPULATION_SAVE_PATH"]
 
-TEST_DATA = [c["TEST_DATA"]]
+HEADER = ['city', 'city_id', 'population']
 
 ### main
 if __name__ == '__main__':
   start = time.time()
+
+  # スクリプトの概要をdump
+  utils.dump_description("Create my-population csv file from Origin Data.")
 
   # GeoJSONをロード
   geo_json = utils.json_parser(GEO_JSON)
@@ -36,7 +41,7 @@ if __name__ == '__main__':
     area_stack = []
     # csvファイルの作成
     with open(POPULATION_SAVE_PATH, 'w') as csv_file:
-      writer = csv.DictWriter(csv_file, fieldnames=['city', 'population'])
+      writer = csv.DictWriter(csv_file, fieldnames=HEADER)
       writer.writeheader()
       
       # GeoJSONのデータに対して以下の処理を行う
@@ -61,7 +66,7 @@ if __name__ == '__main__':
           raise("GeoJSONに含まれる地域の人口データが存在しません")
         
         population = area_df["人口　総数"].head(1).values[0]
-        writer.writerow({'city': city_name, 'population': population})
+        writer.writerow({'city': city_name, 'city_id': int(area_code), 'population': population})
         
   elapsed_time = time.time() - start
   print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
