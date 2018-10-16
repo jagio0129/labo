@@ -5,7 +5,6 @@ import time
 import pandas as pd
 from tqdm import tqdm
 import configparser
-from decimal import Decimal, ROUND_HALF_UP, ROUND_HALF_EVEN
 
 from lib import utils
 from lib.DataProvider import gravity
@@ -19,18 +18,6 @@ c = c["DEFAULT"]
 POPULATION_SAVE_PATH = c["POPULATION_SAVE_PATH"]
 OD_PATH = c["OD_PATH"]
 
-# cityIDの人口を取得する
-def population(city_id):
-  if city_id == str(None):
-    return None
-
-  # 人口データをロード
-  df = pd.read_csv(POPULATION_SAVE_PATH)
-
-  for index, row in df.iterrows():
-    if int(city_id) == int(row["city_id"]):
-      return row["population"]
-  return None
 
 ### main
 if __name__ == '__main__':
@@ -50,13 +37,13 @@ if __name__ == '__main__':
       
       amount  = row["count"]          # 移動量
       distAB  = row["distance"]       # ２点間の距離
-      popA    = population(origin_id) # 始点の人口
-      popB    = population(dest_id)   # 終点の人口
+      popA    = gravity.population(POPULATION_SAVE_PATH, origin_id) # 始点の人口
+      popB    = gravity.population(POPULATION_SAVE_PATH, dest_id)   # 終点の人口
 
+      # 変数をdump
+      gravity.dump_params(amount, origin, popA, dest, popB, distAB)
       # グラビティモデルにおけるパラメータを計算
       param = gravity.param_fomuola(amount, popA, popB, distAB)
-      print("parameter: ", param)
-      raise
       
   elapsed_time = time.time() - start
   print("elapsed_time:{0}".format(elapsed_time) + "[sec]")

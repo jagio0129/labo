@@ -1,5 +1,7 @@
 # coding: UTF-8
 from math import sin, cos, acos, radians
+import pandas as pd
+from decimal import Decimal, ROUND_HALF_UP, ROUND_HALF_EVEN
 
 earth_rad = 6378.137
 
@@ -34,10 +36,35 @@ def param_fomuola(amount, popA, popB, distAB):
   if((amount == 0) or (popA == 0) or (popB ==0) or (distAB == 0)):
     raise "ZeroError"
 
+  popA = round(popA/1000000, 3)  # 100万で割り、有効数字３桁に丸める
+  popB = round(popB/1000000, 3)  # 100万で割り、有効数字３桁に丸める
+  distAB = round(distAB,3)      # 有効数字３桁に丸める
+
   devided  = float(amount)
   devide = float(popA) * float(popB) * float(distAB)
-  
   g = devided / devide
+
+  g = round(g,3)
+
   return g
-  
+
+# cityIDの人口を取得する
+def population(population_data, city_id):
+  if city_id == str(None):
+    return None
+
+  # 人口データをロード
+  df = pd.read_csv(population_data)
+
+  for index, row in df.iterrows():
+    if int(city_id) == int(row["city_id"]):
+      return row["population"]
+  return None
+
+# 各パラメータの値を表示する。
+def dump_params(amount, origin, popA, destination, popB, distAB):
+  print("Origin: %s , 人口: %s 人" % (origin, popA))
+  print("Destination: %s , 人口: %s 人" % (destination, popB))
+  print("2点間の距離: %s km" % distAB)
+  print("2点間の移動量: %s 人" % amount)
 
