@@ -10,4 +10,5 @@ PUBOFFICE_PATH          = %(DATA_PATH)s/puboffice/h2905puboffice_utf8.csv
 POPULATION_PATH         = %(DATA_PATH)s/population
 POPULATION_ORIGIN_DATA  = %(POPULATION_PATH)s/population_2015.csv
 POPULATION_SAVE_PATH    = %(POPULATION_PATH)s/population.csv
+GRAVITY_PATH            = %(DATA_PATH)s/gravity
 TEST_DATA               = %(PERSON_TRIP)s/2013-07-01.csv

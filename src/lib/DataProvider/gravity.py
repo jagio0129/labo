@@ -32,9 +32,11 @@ def fomula(popA, popB, distAB):
 #     amount = 移動量, popA, popB = 人口, distAB = ２点間距離
 def param_fomuola(amount, popA, popB, distAB):
   if((amount is None) or (popA is None) or (popB is None) or (distAB is None)):
-    raise "NoneError"
+    dump_params(amount, None, popA, None, popB, distAB)
+    raise
   if((amount == 0) or (popA == 0) or (popB ==0) or (distAB == 0)):
-    raise "ZeroError"
+    dump_params(amount, None, popA, None, popB, distAB)
+    raise
 
   popA = round(popA/1000000, 3)  # 100万で割り、有効数字３桁に丸める
   popB = round(popB/1000000, 3)  # 100万で割り、有効数字３桁に丸める
@@ -62,7 +64,7 @@ def population(population_data, city_id):
   return None
 
 # 各パラメータの値を表示する。
-def dump_params(amount, origin, popA, destination, popB, distAB):
+def dump_params(amount=None, origin=None, popA=None, destination=None, popB=None, distAB=None):
   print("Origin: %s , 人口: %s 人" % (origin, popA))
   print("Destination: %s , 人口: %s 人" % (destination, popB))
   print("2点間の距離: %s km" % distAB)
