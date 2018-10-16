@@ -70,5 +70,21 @@ def belong(geo_json, lat, lon):
   for feature in geo_json['features']:
     polygon = shape(feature['geometry'])
     if polygon.contains(point):
-        return feature['properties']['N03_004']
-  return None
+      city = feature['properties']['N03_004']
+      city_id = feature['properties']['N03_007']
+      return city, city_id
+  return None, None
+
+# city_idからその市区町村の役所の位置情報を返す
+## return list
+def puboffice_latlon(pupoffice_data_path, city_id):
+  if city_id is str(None):
+    return [None,None]
+
+  df = pd.read_csv(pupoffice_data_path)
+
+  for index, row in df.iterrows():
+    if(int(city_id) == int(row["jiscode"])):
+      return [row["lat"], row["lon"]]
+  
+  return [None,None]
