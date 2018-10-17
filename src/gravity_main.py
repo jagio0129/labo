@@ -20,8 +20,7 @@ POPULATION_SAVE_PATH = c["POPULATION_SAVE_PATH"]
 OD_PATH = c["OD_PATH"]
 GRAVITY_PATH = c["GRAVITY_PATH"]
 
-HEADER = ['origin', 'destination', 'origin_id', 'destination_id', 'gravity_parameter']
-
+HEADER = ['origin', 'destination', 'origin_id', 'destination_id', 'devided', 'devide', 'gravity_parameter']
 
 ### main
 if __name__ == '__main__':
@@ -55,7 +54,7 @@ if __name__ == '__main__':
 
         # グラビティモデルにおけるパラメータを計算
         try:
-          param = gravity.param_fomuola(amount, popA, popB, distAB)
+          devided, devide, param = gravity.param_fomuola(amount, popA, popB, distAB)
         except Exception as e:
           print(e)
           continue
@@ -65,6 +64,8 @@ if __name__ == '__main__':
           'destination':dest,
           'origin_id': origin_id,
           'destination_id': dest_id,
+          'devided': devided,
+          'devide': devide,
           'gravity_parameter': str(param)
         })
         pbar.update(1)
