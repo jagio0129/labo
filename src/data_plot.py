@@ -45,14 +45,14 @@ if __name__ == '__main__':
        
     # general config
     ax.set_title('Parameter G of Gravity Model')
-    ax.set_xlabel('Amount A to B')
-    ax.set_ylabel('popA × popB × distAB')
-    plt.xlim([0,20])  # x range
-    plt.ylim([0,10])  # y range
+    ax.set_xlabel('amountAB × distAB')
+    ax.set_ylabel('popA × popB')
+    plt.xlim([0,200])  # x range
+    plt.ylim([0,2000])  # y range
       
     # save as png
     date_name = utils.file_date(abs_file)
-    tags = "/x20y10"
+    tags = "/x200y2000"
     outpath = GRAVITY_IMAGE_PATH + tags + "/figure-" + date_name + ".png"
     print("Create " + outpath)
     plt.savefig(outpath)

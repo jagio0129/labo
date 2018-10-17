@@ -40,14 +40,12 @@ def param_fomuola(amount, popA, popB, distAB):
     dump_params(amount, None, popA, None, popB, distAB)
     raise
 
-  popA = round(popA/1000000, 3)  # 100万で割り、有効数字３桁に丸める
-  popB = round(popB/1000000, 3)  # 100万で割り、有効数字３桁に丸める
-  distAB = round(distAB,3)      # 有効数字３桁に丸める
-
-  devided   = round(float(amount), 3)
-  devide    = round(float(popA) * float(popB) * float(distAB), 3)
+  popA = round(popA/10000, 3)  # 1万で割り、有効数字３桁に丸める
+  popB = round(popB/10000, 3)  # 1万で割り、有効数字３桁に丸める
+  
+  devided   = float(amount) * float(distAB)
+  devide    = float(popA) * float(popB)
   g = devided / devide
-
   g = round(g,3)
 
   return devided, devide, g
