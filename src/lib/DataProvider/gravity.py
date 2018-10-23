@@ -31,7 +31,7 @@ def fomula(popA, popB, distAB):
 #   args
 #     amount = 移動量, popA, popB = 人口, distAB = ２点間距離
 #   return
-#     devided = 移動量, devide = 人口×距離, g = パラメータ,
+#     g = パラメータ,
 def param_fomuola(amount, popA, popB, distAB):
   if((amount is None) or (popA is None) or (popB is None) or (distAB is None)):
     dump_params(amount, None, popA, None, popB, distAB)
@@ -48,7 +48,19 @@ def param_fomuola(amount, popA, popB, distAB):
   g = devided / devide
   g = round(g,3)
 
-  return devided, devide, g
+  return g
+
+# グラビティモデルの右辺を計算する
+def right_fomula(popA, popB, distAB):
+  if((popA is None) or (popB is None) or (distAB is None)):
+    raise
+  if((popA == 0) or (popB ==0) or (distAB == 0)):
+    raise
+
+  popA = round(popA/10000, 3)  # 1万で割り、有効数字３桁に丸める
+  popB = round(popB/10000, 3)  # 1万で割り、有効数字３桁に丸める
+
+  return popA * popB / distAB
 
 # cityIDの人口を取得する
 def population(population_data, city_id):

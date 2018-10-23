@@ -9,6 +9,7 @@ import csv
 
 from lib import utils
 from lib.DataProvider import gravity
+from lib.DataProvider import population as pop
 
 SOURCE_PATH = os.path.dirname(os.path.abspath(__file__))
 
@@ -16,11 +17,22 @@ c = configparser.ConfigParser()
 c.read(SOURCE_PATH + '/config.ini')
 c = c["DEFAULT"]
 
-POPULATION_SAVE_PATH = c["POPULATION_SAVE_PATH"]
+POPULATION_ORIGIN_DATA = c["POPULATION_ORIGIN_DATA"]
 OD_PATH = c["OD_PATH"]
 GRAVITY_PATH = c["GRAVITY_PATH"]
 
-HEADER = ['origin', 'destination', 'origin_id', 'destination_id', 'devided', 'devide', 'gravity_parameter']
+HEADER = [
+  'origin', 
+  'origin_id', 
+  'destination', 
+  'destination_id', 
+  'origin_pop', 
+  'dest_pop', 
+  'distance', 
+  'amount', 
+  'right_fomula', 
+  'gravity_parameter'
+]
 
 ### main
 if __name__ == '__main__':
@@ -42,30 +54,33 @@ if __name__ == '__main__':
       df = pd.read_csv(abs_file)
       pbar = tqdm(total=len(df))  # for progress bar
       for index, row in df.iterrows():
-        origin    = row["origin"]         # 始点
-        origin_id = row["origin_id"]      # 始点ID
-        dest      = row["destination"]    # 終点
-        dest_id   = row["destination_id"] # 終点ID
-        
-        amount  = row["count"]          # 移動量
-        distAB  = row["distance"]       # ２点間の距離
-        popA    = gravity.population(POPULATION_SAVE_PATH, origin_id) # 始点の人口
-        popB    = gravity.population(POPULATION_SAVE_PATH, dest_id)   # 終点の人口
-
-        # グラビティモデルにおけるパラメータを計算
         try:
-          devided, devide, param = gravity.param_fomuola(amount, popA, popB, distAB)
+          origin      = row["origin"]         # 始点
+          origin_id   = row["origin_id"]      # 始点ID
+          dest        = row["destination"]    # 終点
+          dest_id     = row["destination_id"] # 終点ID
+          origin_pop  = pop.population(POPULATION_ORIGIN_DATA, origin_id) # 始点の人口
+          dest_pop    = pop.population(POPULATION_ORIGIN_DATA, dest_id)   # 終点の人口
+          distance    = row["distance"]       # ２点間の距離
+          amount      = row["count"]          # 移動量
+          # グラビティモデルにおける右辺を計算
+          r = gravity.right_fomula(origin_pop, dest_pop, distance)
+          # グラビティモデルにおけるパラメータを計算
+          param = gravity.param_fomuola(amount, origin_pop, dest_pop, distance)
         except Exception as e:
           print(e)
           continue
         
         writer.writerow({
           'origin': origin,
-          'destination':dest,
           'origin_id': origin_id,
+          'destination':dest,
           'destination_id': dest_id,
-          'devided': devided,
-          'devide': devide,
+          'origin_pop': origin_pop,
+          'dest_pop': dest_pop,
+          'distance': distance,
+          'amount': amount,
+          'right_fomula': r,
           'gravity_parameter': str(param)
         })
         pbar.update(1)

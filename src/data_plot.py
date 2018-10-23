@@ -20,6 +20,10 @@ c = c["DEFAULT"]
 GRAVITY_PATH = c["GRAVITY_PATH"]
 GRAVITY_IMAGE_PATH = GRAVITY_PATH + "/img"
 
+# 人口を１万で割る
+def optimize(pop):
+  return round(pop / 10000, 3)
+
 ### main
 if __name__ == '__main__':
   start = time.time()
@@ -31,9 +35,11 @@ if __name__ == '__main__':
 
     # csv load
     df = pd.read_csv(abs_file)
-    devided_data  = df["devided"].values
-    devide_data   = df["devide"].values
-    gravity_data  = df["gravity_parameter"].values
+    origin_pop  = list(map(optimize, df["origin_pop"].values))
+    dest_pop    = list(map(optimize, df["dest_pop"].values))
+    distance    = df["distance"].values
+    amount      = df['amount'].values
+    r           = df['right_fomula'].values
     
     # figure
     fig = plt.figure()
@@ -41,18 +47,18 @@ if __name__ == '__main__':
 
     # 散布図 config
     ## sはドットの太さ。markerでドット文字を変更できる
-    ax.scatter(devided_data, devide_data, s=1)
+    ax.scatter(amount, r, s=1)
        
     # general config
-    ax.set_title('Parameter G of Gravity Model')
-    ax.set_xlabel('amountAB × distAB')
-    ax.set_ylabel('popA × popB')
-    plt.xlim([0,200])  # x range
-    plt.ylim([0,2000])  # y range
+    ax.set_title('Gravity Model')
+    ax.set_xlabel('Amount')
+    ax.set_ylabel('Right fomula')
+    plt.xlim([0,50])  # x range
+    plt.ylim([0,400])  # y range
       
     # save as png
     date_name = utils.file_date(abs_file)
-    tags = "/x200y2000"
+    tags = "/x50y400"
     outpath = GRAVITY_IMAGE_PATH + tags + "/figure-" + date_name + ".png"
     print("Create " + outpath)
     plt.savefig(outpath)
