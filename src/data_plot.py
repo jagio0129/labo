@@ -40,7 +40,7 @@ def save_png(path, dir, tag, plt):
   plt.savefig(outpath)
 
 # x:距離、 y:移動量でプロット
-def plot(data_frame, path):
+def plot(data_frame, path, dir="default"):
   # データの用意
   # origin_pop  = list(map(optimize, df["origin_pop"].values))
   # dest_pop    = list(map(optimize, df["dest_pop"].values))
@@ -62,7 +62,7 @@ def plot(data_frame, path):
   ax.set_ylabel('Amount')
 
   # save as png
-  save_png(path, "dist-amount-5", "default", plt)
+  save_png(path, dir, "default", plt)
 
 # 片対数計算で表示
 def single_log_plot(data_frame, path):
@@ -114,7 +114,7 @@ def multi_log_plot(data_frame, path):
 
   # save as png
   save_png(path, "dist-amount", "multi-log", plt)
-
+  
 ### main
 if __name__ == '__main__':
   start = time.time()
@@ -126,9 +126,12 @@ if __name__ == '__main__':
 
     # csv load
     df = pd.read_csv(abs_file)
-    
+
+    # 移動量4以上 かつ 距離2km以上を抽出 
+    df = df[(df.amount >= 4) & (df.distance >= 2)]
+
     # plot 
-    plot(df, abs_file)
+    plot(df, abs_file, "over-a4-d2")
     # single_log_plot(df, abs_file)
     # multi_log_plot(df, abs_file)
 
