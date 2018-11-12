@@ -55,6 +55,9 @@ def plot(data_frame, path, dir="default"):
   # 散布図 config
   ## sはドットの太さ。markerでドット文字を変更できる
   ax.scatter(distance, amount, s=1)
+
+  # 一次関数でフィット
+  plt.plot(distance, np.poly1d(np.polyfit(distance, amount, 6))(distance), label='d=6', color='red')
       
   # general config
   ax.set_title('Gravity Model')
@@ -131,7 +134,7 @@ if __name__ == '__main__':
     df = df[(df.amount >= 4) & (df.distance >= 2)]
 
     # plot 
-    plot(df, abs_file, "over-a4-d2")
+    plot(df, abs_file, "over-a4-d2-with-fit6")
     # single_log_plot(df, abs_file)
     # multi_log_plot(df, abs_file)
 
