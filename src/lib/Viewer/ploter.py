@@ -15,6 +15,7 @@ def export(path, dir, tag, filename):
     os.makedirs(file_path)
 
   plt.savefig(outpath)
+  plt.gcf().clear()
 
 # matplotlib 初期化
 def plot(xvalues, yvalues, title, xlabel, ylabel):

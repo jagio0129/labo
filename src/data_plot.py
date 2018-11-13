@@ -27,7 +27,13 @@ def divide_ten_thousond(pop):
 
 # 最小二乗法でフィット
 def fitting(xvalues, yvalues, dimension: int, color='red'):
-  plt.plot(xvalues, np.poly1d(np.polyfit(xvalues, yvalues, dimension))(xvalues), color=color)
+  x = np.array(xvalues)
+  y = np.array(yvalues)
+
+  p4 = np.polyfit(x, y, dimension)
+  xp = np.linspace(0, int(x.max()), 100)
+  p = np.poly1d(p4)
+  plt.plot(xp, p(xp), color=color)
 
 # デフォルト、片対数、両対数をまとめて実行
 def all_plot(xvalues, yvalues, title, xlabel, ylabel, dir, filename):
@@ -67,7 +73,7 @@ def all_plot(xvalues, yvalues, title, xlabel, ylabel, dir, filename):
 
   # 画像ファイルとして保存
   ploter.export(GRAVITY_IMAGE_PATH, dir, "multi-log", filename)
-
+  
 # 最小二乗法付きで実行
 def all_plot_with_fit(xvalues, yvalues, title, xlabel, ylabel, dir, filename, dimension):
 
@@ -113,7 +119,6 @@ def all_plot_with_fit(xvalues, yvalues, title, xlabel, ylabel, dir, filename, di
   # 画像ファイルとして保存
   ploter.export(GRAVITY_IMAGE_PATH, dir, "multi-log-%dd" % dimension, filename)
 
-
 ### main
 if __name__ == '__main__':
   start = time.time()
@@ -125,12 +130,15 @@ if __name__ == '__main__':
 
     # csv load
     df = pd.read_csv(abs_file)
+    # ソート
+    # df = df.sort_values('amount')
 
     distance    = df["distance"].values
     amount      = df['amount'].values
     date_name = utils.file_date(abs_file)
 
     all_plot(distance, amount, "GravityModel", "Distance", "Amount", "default", date_name)
+    all_plot_with_fit(distance, amount, "GravityModel", "Distance", "Amount", "fitting", date_name, 1)
     all_plot_with_fit(distance, amount, "GravityModel", "Distance", "Amount", "fitting", date_name, 2)
 
     # 移動量4以上 かつ 距離2km以上を抽出 
@@ -140,6 +148,7 @@ if __name__ == '__main__':
     amount      = df['amount'].values
     
     all_plot(distance, amount, "GravityModel", "Distance", "Amount", "default-over-4a-2d", date_name)
+    all_plot_with_fit(distance, amount, "GravityModel", "Distance", "Amount", "fitting-over-4a-2d", date_name, 1)
     all_plot_with_fit(distance, amount, "GravityModel", "Distance", "Amount", "fitting-over-4a-2d", date_name, 2)
 
   elapsed_time = time.time() - start
