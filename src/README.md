@@ -5,10 +5,10 @@ pip    18.1
 
 ### set up 
 ```
-sudo apt-get install apache2 gdal-bin -y
+sudo apt-get install apache2 gdal-bin libbz2-dev -y
 sudo add-apt-repository ppa:ubuntugis/ppa && sudo apt-get update
 pip3 install --user git+https://github.com/geopandas/geopandas/
-pip3 install --user pandas jupyter geopy descartes python-geohash tqdm geocoder folium shapely
+pip3 install --user pandas jupyter geopy descartes python-geohash tqdm geocoder folium shapely python3-matplotlib
 cp config.ini.skeleton config.ini  # config.iniを適切に修正
 ```
 
