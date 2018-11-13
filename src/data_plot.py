@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 from lib import utils
+from lib.Viewer import ploter
 
 SOURCE_PATH = os.path.dirname(os.path.abspath(__file__))
 
@@ -24,97 +25,95 @@ GRAVITY_IMAGE_PATH = GRAVITY_PATH + "/img"
 def divide_ten_thousond(pop):
   return round(pop / 10000, 3)
 
-# plot画像を生成する。
-def save_png(path, dir, tag, plt):
-  
-  # save path
-  date_name = utils.file_date(abs_file)
-  outpath = GRAVITY_IMAGE_PATH + "/" + dir + "/"+ tag + "/" + date_name + ".png"
-  file_path = os.path.dirname(outpath)
-  print("Create " + outpath)
-  
-  # ディレクトリが存在しなければ生成
-  if not os.path.exists(file_path):
-    os.makedirs(file_path)
+# 最小二乗法でフィット
+def fitting(xvalues, yvalues, dimension: int, color='red'):
+  plt.plot(xvalues, np.poly1d(np.polyfit(xvalues, yvalues, dimension))(xvalues), color=color)
 
-  plt.savefig(outpath)
+# デフォルト、片対数、両対数をまとめて実行
+def all_plot(xvalues, yvalues, title, xlabel, ylabel, dir, filename):
 
-# x:距離、 y:移動量でプロット
-def plot(data_frame, path, dir="default"):
-  # データの用意
-  # origin_pop  = list(map(optimize, df["origin_pop"].values))
-  # dest_pop    = list(map(optimize, df["dest_pop"].values))
-  distance    = data_frame["distance"].values
-  amount      = data_frame['amount'].values
-  # r           = df['right_fomula'].values
+  # プロット情報のセット
+  ploter.plot(
+    xvalues, 
+    yvalues, 
+    title,
+    xlabel,
+    ylabel
+  )
 
-  # figure
-  fig = plt.figure()
-  ax = fig.add_subplot(1, 1, 1)
+  # 画像ファイルとして保存
+  ploter.export(GRAVITY_IMAGE_PATH, dir, "simple", filename)
 
-  # 散布図 config
-  ## sはドットの太さ。markerでドット文字を変更できる
-  ax.scatter(distance, amount, s=1)
-      
-  # general config
-  ax.set_title('Gravity Model')
-  ax.set_xlabel('DistanceAB')
-  ax.set_ylabel('Amount')
+    # プロット情報のセット
+  ploter.single_log_plot(
+    xvalues, 
+    yvalues, 
+    title,
+    xlabel,
+    ylabel
+  )
 
-  # save as png
-  save_png(path, dir, "default", plt)
+  # 画像ファイルとして保存
+  ploter.export(GRAVITY_IMAGE_PATH, dir, "single-log", filename)
 
-# 片対数計算で表示
-def single_log_plot(data_frame, path):
-  
-  distance    = data_frame["distance"].values
-  amount      = data_frame['amount'].values
-  
-  # figure
-  fig = plt.figure()
-  ax = fig.add_subplot(1, 1, 1)
+    # プロット情報のセット
+  ploter.multi_log_plot(
+    xvalues, 
+    yvalues, 
+    title,
+    xlabel,
+    ylabel
+  )
 
-  # 散布図 config
-  ## sはドットの太さ。markerでドット文字を変更できる
-  ax.scatter(distance, amount, s=1)
-      
-  # general config
-  ax.set_title('Gravity Model')
-  ax.set_xlabel('DistanceAB')
-  ax.set_ylabel('Amount')
+  # 画像ファイルとして保存
+  ploter.export(GRAVITY_IMAGE_PATH, dir, "multi-log", filename)
 
-  # log
-  plt.xscale("log")
+# 最小二乗法付きで実行
+def all_plot_with_fit(xvalues, yvalues, title, xlabel, ylabel, dir, filename, dimension):
 
-  # save as png
-  save_png(path, "dist-amount", "singe-log", plt)
+  # プロット情報のセット
+  ploter.plot(
+    xvalues, 
+    yvalues, 
+    title,
+    xlabel,
+    ylabel
+  )
 
-# 両対数グラフ
-def multi_log_plot(data_frame, path):
-  
-  distance    = data_frame["distance"].values
-  amount      = data_frame['amount'].values
-  
-  # figure
-  fig = plt.figure()
-  ax = fig.add_subplot(1, 1, 1)
+  fitting(xvalues, yvalues, dimension)
 
-  # 散布図 config
-  ## sはドットの太さ。markerでドット文字を変更できる
-  ax.scatter(distance, amount, s=1)
-      
-  # general config
-  ax.set_title('Gravity Model')
-  ax.set_xlabel('DistanceAB')
-  ax.set_ylabel('Amount')
+  # 画像ファイルとして保存
+  ploter.export(GRAVITY_IMAGE_PATH, dir, "simple-%dd" % dimension, filename)
 
-  # log
-  plt.xscale("log")
-  plt.yscale("log")
+    # プロット情報のセット
+  ploter.single_log_plot(
+    xvalues, 
+    yvalues, 
+    title,
+    xlabel,
+    ylabel
+  )
 
-  # save as png
-  save_png(path, "dist-amount", "multi-log", plt)
-  
+  fitting(xvalues, yvalues, dimension)
+
+  # 画像ファイルとして保存
+  ploter.export(GRAVITY_IMAGE_PATH, dir, "single-log-%dd" % dimension, filename)
+
+    # プロット情報のセット
+  ploter.multi_log_plot(
+    xvalues, 
+    yvalues, 
+    title,
+    xlabel,
+    ylabel
+  )
+
+  fitting(xvalues, yvalues, dimension)
+
+  # 画像ファイルとして保存
+  ploter.export(GRAVITY_IMAGE_PATH, dir, "multi-log-%dd" % dimension, filename)
+
+
 ### main
 if __name__ == '__main__':
   start = time.time()
@@ -127,13 +126,21 @@ if __name__ == '__main__':
     # csv load
     df = pd.read_csv(abs_file)
 
+    distance    = df["distance"].values
+    amount      = df['amount'].values
+    date_name = utils.file_date(abs_file)
+
+    all_plot(distance, amount, "GravityModel", "Distance", "Amount", "default", date_name)
+    all_plot_with_fit(distance, amount, "GravityModel", "Distance", "Amount", "fitting", date_name, 2)
+
     # 移動量4以上 かつ 距離2km以上を抽出 
     df = df[(df.amount >= 4) & (df.distance >= 2)]
 
-    # plot 
-    plot(df, abs_file, "over-a4-d2")
-    # single_log_plot(df, abs_file)
-    # multi_log_plot(df, abs_file)
+    distance    = df["distance"].values
+    amount      = df['amount'].values
+    
+    all_plot(distance, amount, "GravityModel", "Distance", "Amount", "default-over-4a-2d", date_name)
+    all_plot_with_fit(distance, amount, "GravityModel", "Distance", "Amount", "fitting-over-4a-2d", date_name, 2)
 
   elapsed_time = time.time() - start
   print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
