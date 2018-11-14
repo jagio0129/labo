@@ -1,6 +1,9 @@
 # coding: UTF-8
 import pandas as pd
 from collections import defaultdict
+from tqdm import tqdm
+
+from lib.DataProvider import user
 
 # ユーザ一覧
 def user_list(data_frame):
@@ -63,3 +66,36 @@ def sexies_rate(data_frame):
     sex_type = user_df['sex'].values[0]
     d[sex_type] += 1
   return d
+
+# 一日で一箇所の施設に滞在したユーザかどうか
+def is_stop_one_point_user(data_frame, user_id):
+  # indexのフリ直し
+  df = data_frame[data_frame['user_id'] == user_id].reset_index()
+  
+  # 先頭行と末尾行除く
+  new_df = df.drop([0, len(df)-1])
+  
+  # レコード数が1以下ならreturn
+  if len(new_df.index) <= 1:
+    return False
+
+  # statusにMOVEしか含まないならreturn
+  if set(new_df.status.unique()) == set(["MOVE"]):
+    return False
+  
+  # STAYレコードを1つだけ含むユーザを抽出
+  if new_df.status.value_counts()["STAY"] == 1:
+    return True
+  return False
+
+# 一日で一箇所の施設に滞在したユーザのid一覧
+def stop_one_point_user_ids(data_frame):
+  mList = []
+  uList = user.user_list(data_frame)
+  pbar = tqdm(total=len(uList))  # for progress bar
+  for id in uList:
+    if is_stop_one_point_user(data_frame, id):
+      mList.append(id)
+    pbar.update(1)
+  pbar.close()
+  return sorted(mList)
