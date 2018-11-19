@@ -33,6 +33,20 @@ def get_start_end(data_frame, user_id):
   user_df = data_frame[data_frame['user_id'] == user_id]
   return pd.concat([user_df.head(1),user_df.tail(1)])
 
+# 指定ユーザの最初のレコードと、STAY状態のデータフレームを返す
+#   return >DataFrame>
+def orgin_and_stay(data_frame, user_id):
+  user_df = data_frame[data_frame['user_id'] == user_id]
+  # レコードのheadを取得
+  start = user_df.head(1)
+  # 状態がSTAYのレコードを取得
+  stay = user_df[user_df['status'] == "STAY"]
+  # 上記３つを結合
+  user_df = pd.concat([start,stay])
+  # 重複レコードを削除
+  od_df = user_df[~user_df.duplicated()]
+  return od_df  
+
 # 指定ユーザの最初と最後のレコードに加えて、STAY状態のデータフレームを返す
 #   return <DataFrame>
 def get_start_end_and_stay(data_frame, user_id):
