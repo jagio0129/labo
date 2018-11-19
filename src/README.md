@@ -28,12 +28,18 @@ python3 plot_map.py
 ブラウザから`localhost/cgi-bin/index.rb`にアクセス
 
 ### 各プログラムの説明
+- data_plot.py
+  - データをmatplotlibで出力する
+- dist_main.py
+  - od_main.pyで生成したODデータに距離を追加する。
 - facility_main.py
   - 各施設をどのくらいのユーザが訪れたか算出する
 - gravity_main.py
   - 流動データをグラビティモデルに適応する
 - od_main.py
-  - 全ODデータから流動量を算出
+  - 全パーソントリップデータからODデータを作成
+- one_od_main.py
+  - 一箇所しか立ち寄らなかったユーザに対してODデータを作成する
 - plot_map.py
   - GeoJSONなどをmapにプロットする
 - population_main.py
