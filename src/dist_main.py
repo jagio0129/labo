@@ -34,6 +34,10 @@ if __name__ == '__main__':
     print("Load: " + abs_file)
 
     od_df = pd.read_csv(abs_file)
+    # ヘッダーにdistanceが存在していれば次
+    if 'distance' in od_df.columns.values:
+      print("'distance' header exists.")
+      continue
     od_df["distance"] = 0.0
       
     # ODデータに対して以下の処理を行う
@@ -60,7 +64,6 @@ if __name__ == '__main__':
 
     # csvファイルとして保存
     od_df.to_csv(abs_file, index=False)
-    print(od_df)
    
   elapsed_time = time.time() - start
   print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
