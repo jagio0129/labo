@@ -3,10 +3,12 @@
 import matplotlib
 matplotlib.use('Agg') # -----(1)
 import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
+import numpy as np
 import os
 
-def export(path, dir, tag, filename):
-  outpath = "%s/%s/%s/%s.png" % (path, dir, tag, filename) 
+def export(path, filename="default"):
+  outpath = "%s/%s.png" % (path, filename)
   file_path = os.path.dirname(outpath)
   print("Create " + outpath)
   
@@ -19,23 +21,20 @@ def export(path, dir, tag, filename):
 
 # matplotlib 初期化
 def plot(xvalues, yvalues, title, xlabel, ylabel):
-  fig = plt.figure()
-  ax = fig.add_subplot(1, 1, 1)
+  # general config
+  plt.title(title)
+  plt.xlabel(xlabel)
+  plt.ylabel(ylabel)
 
   # 散布図 config
   ## sはドットの太さ。markerでドット文字を変更できる
-  ax.scatter(xvalues, yvalues, s=1)
-    
-  # general config
-  ax.set_title(title)
-  ax.set_xlabel(xlabel)
-  ax.set_ylabel(ylabel)
+  plt.scatter(xvalues, yvalues, s=1)
 
 # 片対数
 def single_log_plot(xvalues, yvalues, title, xlabel, ylabel):
   plot(xvalues, yvalues, title, xlabel, ylabel)
   # log
-  plt.xscale("log")
+  plt.yscale("log")
 
 # 両対数
 def multi_log_plot(xvalues, yvalues, title, xlabel, ylabel):
@@ -43,3 +42,33 @@ def multi_log_plot(xvalues, yvalues, title, xlabel, ylabel):
   # log
   plt.xscale("log")
   plt.yscale("log")
+
+# 直線フィッティング
+def liner_fit(xdata, ydata):
+  def func(x, a, b):
+    return a*x + b
+  # initial guess for the parameters
+  parameter_initial = np.array([0.0, 0.0]) #a, b
+  paramater_optimal, _ = curve_fit(func, xdata, ydata, p0=parameter_initial)
+  y = func(xdata,paramater_optimal[0],paramater_optimal[1])
+  plt.plot(xdata, y, '-', color='red')
+
+# 指数関数フィッティング
+def exp_fit(xdata, ydata):
+  def func(x, a, b):
+    return np.exp(a*x) + b
+  # initial guess for the parameters
+  parameter_initial = np.array([0.0, 0.0]) #a, b
+  paramater_optimal, _ = curve_fit(func, xdata, ydata, p0=parameter_initial)
+  y = func(xdata,paramater_optimal[0],paramater_optimal[1])
+  plt.plot(xdata, y, '-', color='red')
+
+# べき関数フィッティング
+def pow_fit(xdata, ydata):
+  def func(x, a, b):
+    return pow(x,a) + b
+  # initial guess for the parameters
+  parameter_initial = np.array([0.0, 0.0]) #a, b
+  paramater_optimal, _ = curve_fit(func, xdata, ydata, p0=parameter_initial)
+  y = func(xdata,paramater_optimal[0],paramater_optimal[1])
+  plt.plot(xdata, y, '-', color='red')
