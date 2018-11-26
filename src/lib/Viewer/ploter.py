@@ -47,23 +47,25 @@ def multi_log_plot(xvalues, yvalues, title, xlabel, ylabel):
 def liner_fit(xdata, ydata):
   def func(x, a, b):
     return a*x + b
-  fit(xdata,ydata,func)
+  parameter_initial = np.array([0.0, 0.0]) #a, b,
+  paramater_optimal, _ = curve_fit(func, xdata, ydata, p0=parameter_initial)
+  y = func(xdata,paramater_optimal[0],paramater_optimal[1])
+  plt.plot(xdata, y, '-', color='red')
 
 # 指数関数フィッティング
 def exp_fit(xdata, ydata):
   def func(x, a, b):
     return np.exp(a*x) + b
-  fit(xdata,ydata,func)
+  parameter_initial = np.array([0.0, 0.0]) #a, b,
+  paramater_optimal, _ = curve_fit(func, xdata, ydata, p0=parameter_initial)
+  y = func(xdata,paramater_optimal[0],paramater_optimal[1])
+  plt.plot(xdata, y, '-', color='red')
 
 # べき関数フィッティング
 def pow_fit(xdata, ydata):
   def func(x, a, b):
-    return pow(x,a) + b
-  fit(xdata,ydata,func)
-
-def fit(xdata, ydata, fomula):
-  # initial guess for the parameters
-  parameter_initial = np.array([1.0, 0.0]) #a, b
-  paramater_optimal, _ = curve_fit(fomula, xdata, ydata, p0=parameter_initial)
-  y = fomula(xdata,paramater_optimal[0],paramater_optimal[1])
+    return a*pow(x,b)
+  parameter_initial = np.array([0, 0]) #a, b
+  paramater_optimal, _ = curve_fit(func, xdata, ydata, p0=parameter_initial)
+  y = func(xdata,paramater_optimal[0],paramater_optimal[1])
   plt.plot(xdata, y, '-', color='red')

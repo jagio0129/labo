@@ -39,15 +39,15 @@ class TestData():
   #   bias : データを生成するのに使用する関数("exp":指数関数、"pow":べき関数)
   #   margin : ランダムで誤差をつくるためのしきい値
   @classmethod
-  def create(cls, bias :str, num=100, margin=0):
+  def create(cls, bias :str, num=50, margin=0):
     x, y = list(), list()
     for v in range(num):
+      v += 1
       x.append(v)
       y.append(eval("cls.%s_bias(v)" % bias))
     # yに誤差を発生させる
     y = [v + int(v/10) * random.randint(-margin, margin) for v in y]
     # yに対してソートする
-    # y = sorted(y)
     return np.array(x), np.array(y)
 
 class Plot:
@@ -133,6 +133,47 @@ class LogScalePlot:
 def divide_ten_thousond(pop):
   return round(pop / 10000, 3)
 
+# サンプルデータを出力するすべての処理を実行
+def all_sample_plot(sample, margin):
+  #methods = ["exp", "pow"]
+  methods = ["exp"]
+  for method in methods:
+      
+    # テストデータ
+    x, y = TestData.create(method, sample, margin)
+    
+    # save path
+    folder = method
+    
+    p = Plot("Test")
+    p.default(x, y, "default-%s" % folder, folder)
+    exec("p.%s_fit(x, y, 'fit-%s', folder)" % (folder, folder))
+    exec("p.%s_fit_with_fomula(x, y, 'fit-%s-with-fomula', folder)" % (folder, folder))
+
+    logp = LogScalePlot("Test")
+    logp.single(x, y, "single-%s" % folder, folder)
+    logp.single_fit(x, y, "single-fit-%s" % folder, folder)
+    logp.multi(x, y, "multi-%s" % folder, folder)
+    logp.multi_fit(x, y, "multi-fit-%s" % folder, folder)
+
+def all_plot(x, y, path):
+  methods = ["exp", "pow"]
+  # methods = ["exp"]
+  for method in methods:
+    folder = GRAVITY_IMAGE_PATH + "/" + path
+    exp_folder = folder + "/exp"
+    pow_folder = folder + "/pow"
+
+    p = Plot(path)
+    p.default(x, y, "default", folder)
+    exec("p.%s_fit(x, y, 'fit-%s', eval('%s_folder'))" % (method, method, method))
+    
+    logp = LogScalePlot(path)
+    logp.single(x, y, "single-%s" % method, eval("%s_folder" % method))
+    logp.single_fit(x, y, "single-fit-%s" % method, eval("%s_folder" % method))
+    logp.multi(x, y, "multi-%s" % method, eval("%s_folder" % method))
+    logp.multi_fit(x, y, "multi-fit-%s" % method, eval("%s_folder" % method))
+
 ### main
 if __name__ == '__main__':
   start = time.time()
@@ -143,41 +184,23 @@ if __name__ == '__main__':
   TEST_PATH = [GRAVITY_PATH + "/gravity_param-od-2013-07-01.csv"]
   
   # ODデータファイルに対し以下の処理
-  # for abs_file in utils.file_list(GRAVITY_PATH):
-  for abs_file in TEST_PATH:
+  for abs_file in utils.file_list(GRAVITY_PATH):
+  # for abs_file in TEST_PATH:
     print("Load: " + abs_file)
 
     # csv load
     df = pd.read_csv(abs_file)
+    # 移動量4以上、距離5km以上のデータだけ抽出
+    df = df[(df.amount >= 4) & (df.distance >= 5)]
     # x軸に対して昇順ソートしないと正しくフィットさせられない
     df = df.sort_values("distance")
     
-    # date_name   = utils.file_date(abs_file)
-    # x = df.distance
-    # y = df.amount
+    date_name = utils.file_date(abs_file)
+    x = df.distance
+    y = df.amount
 
-    methods = ["exp", "pow"]
-    for method in methods:
-        
-      # テストデータ
-      x, y = TestData.create(method, 100, 5)
+    all_plot(x, y, date_name)
 
-      folder = method
-      
-      p = Plot("Test")
-      p.default(x, y, "default-%s" % folder, folder)
-      exec("p.%s_fit(x, y, 'fit-%s', folder)" % (folder, folder))
-      exec("p.%s_fit_with_fomula(x, y, 'fit-%s-with-fomula', folder)" % (folder, folder))
-
-      logp = LogScalePlot("Test")
-      logp.single(x, y, "single-%s" % folder, folder)
-      logp.single_fit(x, y, "single-fit-%s" % folder, folder)
-      logp.multi(x, y, "multi-%s" % folder, folder)
-      logp.multi_fit(x, y, "multi-fit-%s" % folder, folder)
-
-      #plot_fit(x, y, "prod-with-fit-pow", "prod")
-      #multi_log_plot_fit(x, y, "prod-log-fit-pow", "prod")
-    
   elapsed_time = time.time() - start
   print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
 
