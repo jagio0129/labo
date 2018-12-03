@@ -156,6 +156,7 @@ def all_sample_plot(sample, margin):
     logp.multi(x, y, "multi-%s" % folder, folder)
     logp.multi_fit(x, y, "multi-fit-%s" % folder, folder)
 
+# 実データを出力するすべての処理を実行
 def all_plot(x, y, path):
   methods = ["exp", "pow"]
   # methods = ["exp"]
@@ -174,6 +175,12 @@ def all_plot(x, y, path):
     logp.multi(x, y, "multi-%s" % method, eval("%s_folder" % method))
     logp.multi_fit(x, y, "multi-fit-%s" % method, eval("%s_folder" % method))
 
+def exp_func(x, a, b):
+  return np.exp(a*x) + b
+
+def pow_func(x, a, b):
+  return b*pow(x,a)
+
 ### main
 if __name__ == '__main__':
   start = time.time()
@@ -184,22 +191,34 @@ if __name__ == '__main__':
   TEST_PATH = [GRAVITY_PATH + "/gravity_param-od-2013-07-01.csv"]
   
   # ODデータファイルに対し以下の処理
-  for abs_file in utils.file_list(GRAVITY_PATH):
-  # for abs_file in TEST_PATH:
+  # for abs_file in utils.file_list(GRAVITY_PATH):
+  for abs_file in TEST_PATH:
     print("Load: " + abs_file)
 
     # csv load
     df = pd.read_csv(abs_file)
     # 移動量4以上、距離5km以上のデータだけ抽出
-    df = df[(df.amount >= 4) & (df.distance >= 5)]
+    # df = df[(df.amount >= 4) & (df.distance >= 5)]
     # x軸に対して昇順ソートしないと正しくフィットさせられない
     df = df.sort_values("distance")
-    
     date_name = utils.file_date(abs_file)
+    
     x = df.distance
     y = df.amount
 
-    all_plot(x, y, date_name)
+    outpath = "./test_log.png"
+
+    plt.scatter(x,y, s=1)
+
+    A = np.array([x,np.ones(len(x))])
+    A = A.T
+    a,b = np.linalg.lstsq(A,y,rcond=-1)[0]
+
+    plt.plot(x,pow_func(x,a,b),"r-")
+    plt.xscale("log")
+    plt.yscale("log")
+
+    plt.savefig(outpath)
 
   elapsed_time = time.time() - start
   print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
