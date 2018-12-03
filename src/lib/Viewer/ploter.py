@@ -83,6 +83,7 @@ class Numpy():
     a, b = np.linalg._lstsq(A,y,rcond=-1)[0]
     return a, b
 
+  
   @classmethod
   def liner_fit(cls, x, y):
     a, b = cls._lstsq(x, y)
