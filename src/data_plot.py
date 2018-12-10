@@ -14,21 +14,33 @@ import math
 
 from lib import utils
 from lib.Viewer import ploter
+from lib.DataProvider import test_data
 
 SOURCE_PATH = os.path.dirname(os.path.abspath(__file__))
 
-c = configparser.ConfigParser()
-c.read(SOURCE_PATH + '/config.ini')
-c = c["DEFAULT"]
+def test():
+  outpath = "./test.png"
 
-GRAVITY_PATH = c["GRAVITY_PATH"]
-GRAVITY_IMAGE_PATH = GRAVITY_PATH + "/img"
+  x, y = test_data.create("pow", margin=2)
+  # 実データ
+  plt.scatter(x,y, s=1)
+  # 実関数
+  plt.plot(x,test_data.pow_bias(x), "g--")
+  # フィッティング
+  ploter.Numpy.pow_fit(x,y)
 
-### main
-if __name__ == '__main__':
-  start = time.time()
-  utils.dump_description("Plot Gravity Model data.")
+  #plt.xscale("log")
+  #plt.yscale("log")
 
+  plt.savefig(outpath)
+
+
+def main():
+  c = configparser.ConfigParser()
+  c.read(SOURCE_PATH + '/config.ini')
+  c = c["DEFAULT"]
+
+  GRAVITY_PATH = c["GRAVITY_PATH"]
   GRAVITY_PATH += "/default"
   # テスト用
   TEST_PATH = [GRAVITY_PATH + "/gravity_param-od-2013-07-01.csv"]
@@ -53,8 +65,19 @@ if __name__ == '__main__':
 
     plt.scatter(x,y, s=1)
 
-    ploter.Numpy.liner_fit(x,y)    
+    ploter.Numpy.pow_fit(x,y)    
+    plt.xscale("log")
+    plt.yscale("log")
     plt.savefig(outpath)
+
+
+### main
+if __name__ == '__main__':
+  start = time.time()
+  utils.dump_description("Plot Gravity Model data.")
+
+  test()
+  
 
   elapsed_time = time.time() - start
   print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
