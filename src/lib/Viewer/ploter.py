@@ -94,4 +94,23 @@ class Numpy():
     X = np.vstack([logx, np.ones(len(logx))]).T
     b,a = np.linalg.lstsq(X,logy,rcond=None)[0]
     a = math.e ** a
+    print(b,a)
     plt.plot(x,mymath.pow_func(x, a, b), "r-")
+
+class Origin:
+  @classmethod
+  def lstsq(cls, xdata, ydata):
+    xdata, ydata = np.log(xdata), np.log(ydata)
+    x_sum = y_sum = xx_sum = yy_sum = xy_sum = 0.
+    for i in range(xdata.size):
+      x_sum = x_sum + xdata[i]
+      xx_sum = xx_sum + xdata[i]**2
+      y_sum = y_sum + ydata[i]
+      yy_sum = yy_sum + ydata[i]**2
+      xy_sum = xy_sum + xdata[i]*ydata[i]
+    delta = xdata.size*xx_sum - x_sum**2
+    a = (xdata.size*xy_sum - x_sum*y_sum)/delta
+    b = (xx_sum*y_sum - x_sum*xy_sum)/delta
+    b = math.e ** b
+    print(a,b)
+    return a, b
