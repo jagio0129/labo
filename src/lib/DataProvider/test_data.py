@@ -2,6 +2,13 @@
 import random
 import numpy as np
 
+# biasの関数一覧を返す
+def bias_type():
+  return [
+    "exp", 
+    "pow"
+  ]
+  
 # 指数関数
 def exp_bias(x):
   return np.exp(x/20)
