@@ -31,3 +31,13 @@ def create(bias :str, num=50, margin=0):
   y = [v + int(v/10) * random.randint(-margin, margin) for v in y]
   # yに対してソートする
   return np.array(x), np.array(y)
+
+class HeatMap:
+
+  @classmethod
+  def create(cls):
+    orgin  = ["港区","中央区","千代田区", "港区", "港区","港区","港区"]
+    dest   = ["千代田区","港区","中央区", "さいたま市","世田谷", "大田区", "中野区"]
+    amount = np.random.rand(len(orgin)) * 10
+
+    return orgin, dest, amount
