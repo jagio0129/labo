@@ -3,6 +3,7 @@ import time
 import os
 import configparser
 import pandas as pd
+import numpy as np
 import matplotlib
 matplotlib.rcParams['font.family'] = 'IPAexGothic'
 matplotlib.use('Agg') # -----(1)
@@ -28,34 +29,38 @@ GRAVITY_PATH     = c["GRAVITY_PATH"] + "/default"
 TEST_DATA   = [GRAVITY_PATH + "/gravity_param-od-2013-07-01.csv"]
 
 def plot_heatmap(x,y, value):
-  fig = plt.figure(figsize=(30, 14)) #...1
+  unq_x, unq_y = len(np.unique(x)), len(np.unique(y))
+  print("Destination : %d, Origin : %d" % (unq_x, unq_y))
+
+  fig = plt.figure(figsize=(22, 30)) #...1
 
   # Figure内にAxesを追加()
   ax = fig.add_subplot(111) #...2
   
-  plt.title("Heat Map",fontsize=24)
-  plt.xlabel("Origin",fontsize=20)
-  plt.ylabel("Destination", fontsize=20)
-  plt.yticks(fontsize=18)              # y軸のlabel
-  plt.xticks(rotation=90, fontsize=10) # x軸のlabel
+  plt.title("Heat Map",fontsize=40)
+  plt.xlabel("Destination",fontsize=30)
+  plt.ylabel("Origin", fontsize=30)
+
+  plt.yticks(fontsize=7)              # y軸のlabel
+  plt.xticks(rotation=90, fontsize=14) # x軸のlabel
   color_bar(value)                    # カラーバーの表示
   plt.grid(which='major',color='gray',linestyle='--')
-  plt.scatter(x, y, s=100, color=color(value))
-
-  outpath = "./"
-  ploter.export(outpath)
+  plt.scatter(x, y, s=50, color=color(value))
 
 def color_bar(value):
   m = cm.ScalarMappable(cmap=cm.jet)
   m.set_array(value)
-  plt.colorbar(m).ax.tick_params(labelsize=30)
+  cbar = plt.colorbar(m)
+  cbar.set_label('Amount',size=30)
+  cbar.ax.tick_params(labelsize=30)
+  # plt.colorbar(m).ax.tick_params(labelsize=30)
 
 def color(value):
   return cm.jet(value/float(value.max()))
 
 def main():
-  # for abs_file in utils.file_list(OD_PATH): # 実データ用
-  for abs_file in TEST_DATA:  # テスト用
+  for abs_file in utils.file_list(GRAVITY_PATH): # 実データ用
+  # for abs_file in TEST_DATA:  # テスト用
     print(abs_file)
 
     df = pd.read_csv(abs_file)
@@ -69,7 +74,12 @@ def main():
     # テストデータ
     # origin, dest, amount = test_data.HeatMap.create()
 
-    plot_heatmap(origin,dest,amount)
+    plot_heatmap(dest,origin,amount)
+
+    date_name = utils.file_date(abs_file)
+    tags = "/a4d4"
+    outpath = c["DATA_PATH"] + "/gravity_heatmap" + tags
+    ploter.export(outpath, date_name)
     
 if __name__ == '__main__':
   start = time.time()
