@@ -4,21 +4,10 @@ import os
 import configparser
 import pandas as pd
 import numpy as np
-import matplotlib
-matplotlib.rcParams['font.family'] = 'IPAexGothic'
-matplotlib.use('Agg') # -----(1)
-import matplotlib.pyplot as plt
-import matplotlib.font_manager
-import matplotlib.cm as cm
-from matplotlib.backends.backend_pdf import PdfPages
-import seaborn as sns
-# フォントのデータのパス
-# print(matplotlib.font_manager.findSystemFonts(fontpaths=None, fontext='ttf'))
-# フォントの指定名確認
-# print([f.name for f in matplotlib.font_manager.fontManager.ttflist])  
 
 from lib import utils
 from lib.Viewer import ploter
+from lib.Viewer import heatmap
 from lib.DataProvider import test_data
 
 SOURCE_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -29,75 +18,6 @@ c = c["DEFAULT"]
 
 GRAVITY_PATH     = c["GRAVITY_PATH"] + "/default"
 TEST_DATA   = [GRAVITY_PATH + "/gravity_param-od-2013-07-01.csv"]
-
-def export_pdf(path, filename="default"):
-  outpath = "%s/%s.pdf" % (path, filename)
-  file_path = os.path.dirname(outpath)
-  print("Create " + outpath)
-
-  # ディレクトリが存在しなければ生成
-  if not os.path.exists(file_path):
-    os.makedirs(file_path)
-
-  pdf = PdfPages(outpath)
-  pdf.savefig()
-  pdf.close()
-
-def plot_heatmap(x,y, value):
-  unq_x, unq_y = len(np.unique(x)), len(np.unique(y))
-  print("Destination : %d, Origin : %d" % (unq_x, unq_y))
-
-  fig = plt.figure(figsize=(22, 30),dpi=100) #...1
-
-  # Figure内にAxesを追加()
-  ax = fig.add_subplot(111) #...2
-  
-  plt.title("Heat Map",fontsize=40)
-  plt.xlabel("Destination",fontsize=30)
-  plt.ylabel("Origin", fontsize=30)
-
-  plt.yticks(fontsize=7)              # y軸のlabel
-  plt.xticks(rotation=90, fontsize=14) # x軸のlabel
-  color_bar(value)                    # カラーバーの表示
-  plt.grid(which='major',color='gray',linestyle='--')
-
-  print(x)
-  plt.scatter(x, y, s=50, color=color(value))
-
-def plot_mesh_heatmap(data_frame,values,column,index):
-  unq_x, unq_y = len(data_frame.origin), len(data_frame.destination)
-  print("Destination : %d, Origin : %d" % (unq_x, unq_y))
-
-  fig = plt.figure(figsize=(22, 30),dpi=100) #...1
-
-  plt.title("Heat Map",fontsize=40)
-  plt.xlabel("Destination",fontsize=30)
-  plt.ylabel("Origin", fontsize=30)
-
-  plt.yticks(fontsize=7)              # y軸のlabel
-  plt.xticks(rotation=90, fontsize=14) # x軸のlabel
-  
-  # plotするデータの整形
-  df_pivot = pd.pivot_table(data=data_frame, values=values, columns=column, index=index)
-  # cbarの設定
-  cmap = sns.cubehelix_palette(as_cmap=True, light=.9)
-  # null値をマスクして表示するための設定。
-  mask = df_pivot.isnull()
-
-  ax = sns.heatmap(df_pivot, cbar_kws={'label': 'Amount'}, cmap='OrRd', mask=mask)
-  ax.set_facecolor('#3cb371') # null値の色を設定
-  ax.figure.axes[-1].yaxis.label.set_size(30) # cbarのラベルのサイズ
-  
-def color_bar(value):
-  m = cm.ScalarMappable(cmap=cm.jet)
-  m.set_array(value)
-  cbar = plt.colorbar(m)
-  cbar.set_label('Amount',size=30)
-  cbar.ax.tick_params(labelsize=30)
-  # plt.colorbar(m).ax.tick_params(labelsize=30)
-
-def color(value):
-  return cm.jet(value/float(value.max()))
 
 def main(gravity_path, a4d4_f, tags):
   # for abs_file in utils.file_list(gravity_path): # 実データ用
@@ -116,13 +36,13 @@ def main(gravity_path, a4d4_f, tags):
     # テストデータ
     # origin, dest, amount = test_data.HeatMap.create()
     
-    plot_mesh_heatmap(df, 'amount', 'origin', 'destination')
+    heatmap.plot_heatmap(df, 'amount', 'origin', 'destination')
     # plot_heatmap(dest,origin,amount)
 
     date_name = utils.file_date(abs_file)
     outpath = c["DATA_PATH"] + "/gravity_heatmap" + tags
     #ploter.export(outpath, date_name)
-    export_pdf(outpath,date_name)
+    heatmap.export_pdf(outpath,date_name)
 
 def default():
   gravity_data = c["GRAVITY_PATH"] + "/default"
