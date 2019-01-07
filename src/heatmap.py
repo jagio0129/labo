@@ -6,7 +6,6 @@ import pandas as pd
 import numpy as np
 
 from lib import utils
-from lib.Viewer import ploter
 from lib.Viewer import heatmap
 from lib.DataProvider import test_data
 
@@ -27,21 +26,14 @@ def main(gravity_path, a4d4_f, tags):
     df = pd.read_csv(abs_file)
     if a4d4_f:
       df = df[(df.amount > 4) & (df.distance > 4)]
+    # df = df.sort_values('amount',ascending=False) # 移動量の多い順にソート
     print(df.loc[:,['origin','destination', 'amount']])
-    
-    origin = df.origin.values
-    dest   = df.destination.values
-    amount      = df.amount.values
 
-    # テストデータ
-    # origin, dest, amount = test_data.HeatMap.create()
-    
     heatmap.plot_heatmap(df, 'amount', 'origin', 'destination')
-    # plot_heatmap(dest,origin,amount)
-
+    
     date_name = utils.file_date(abs_file)
     outpath = c["DATA_PATH"] + "/gravity_heatmap" + tags
-    #ploter.export(outpath, date_name)
+    
     heatmap.export_pdf(outpath,date_name)
 
 def default():

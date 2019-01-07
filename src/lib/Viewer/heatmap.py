@@ -28,9 +28,8 @@ def export_pdf(path, filename="default"):
   pdf.savefig()
   pdf.close()
 
-
 def plot_heatmap(data_frame,values,column,index):
-  unq_x, unq_y = len(data_frame.origin), len(data_frame.destination)
+  unq_x, unq_y = len(data_frame.origin.unique()), len(data_frame.destination.unique())
   print("Destination : %d, Origin : %d" % (unq_x, unq_y))
 
   fig = plt.figure(figsize=(22, 30),dpi=100) #...1
@@ -40,10 +39,15 @@ def plot_heatmap(data_frame,values,column,index):
   plt.ylabel("Origin", fontsize=30)
 
   plt.yticks(fontsize=7)              # y軸のlabel
-  plt.xticks(rotation=90, fontsize=14) # x軸のlabel
+  plt.xticks(rotation=90, fontsize=7) # x軸のlabel
   
   # plotするデータの整形
   df_pivot = pd.pivot_table(data=data_frame, values=values, columns=column, index=index)
+  # 列方向に値の昇順ソート
+  for column in df_pivot.columns.values:
+    df_pivot = df_pivot.sort_values(by=column)
+  print(df_pivot)
+  
   # cbarの設定
   cmap = sns.cubehelix_palette(as_cmap=True, light=.9)
   # null値をマスクして表示するための設定。
