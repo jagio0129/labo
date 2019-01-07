@@ -29,13 +29,15 @@ python3 plot_map.py
 
 ### 各プログラムの説明
 - data_plot.py
-  - データをmatplotlibで出力する
+  - データをmatplotlibで出力する.最小二乗フィッティングとかも行う。
 - dist_main.py
   - od_main.pyで生成したODデータに距離を追加する。
 - facility_main.py
   - 各施設をどのくらいのユーザが訪れたか算出する
 - gravity_main.py
   - 流動データをグラビティモデルに適応する
+- heatmap.py
+  - 移動量、origin、destinationでのヒートマップを作成する。
 - od_main.py
   - 全パーソントリップデータからODデータを作成
 - one_od_main.py
