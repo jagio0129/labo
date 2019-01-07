@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager
 import matplotlib.cm as cm
 from matplotlib.backends.backend_pdf import PdfPages
+import seaborn as sns
 # フォントのデータのパス
 # print(matplotlib.font_manager.findSystemFonts(fontpaths=None, fontext='ttf'))
 # フォントの指定名確認
@@ -59,8 +60,34 @@ def plot_heatmap(x,y, value):
   plt.xticks(rotation=90, fontsize=14) # x軸のlabel
   color_bar(value)                    # カラーバーの表示
   plt.grid(which='major',color='gray',linestyle='--')
+
+  print(x)
   plt.scatter(x, y, s=50, color=color(value))
 
+def plot_mesh_heatmap(data_frame,values,column,index):
+  unq_x, unq_y = len(data_frame.origin), len(data_frame.destination)
+  print("Destination : %d, Origin : %d" % (unq_x, unq_y))
+
+  fig = plt.figure(figsize=(22, 30),dpi=100) #...1
+
+  plt.title("Heat Map",fontsize=40)
+  plt.xlabel("Destination",fontsize=30)
+  plt.ylabel("Origin", fontsize=30)
+
+  plt.yticks(fontsize=7)              # y軸のlabel
+  plt.xticks(rotation=90, fontsize=14) # x軸のlabel
+  
+  # plotするデータの整形
+  df_pivot = pd.pivot_table(data=data_frame, values=values, columns=column, index=index)
+  # cbarの設定
+  cmap = sns.cubehelix_palette(as_cmap=True, light=.9)
+  # null値をマスクして表示するための設定。
+  mask = df_pivot.isnull()
+
+  ax = sns.heatmap(df_pivot, cbar_kws={'label': 'Amount'}, cmap='OrRd', mask=mask)
+  ax.set_facecolor('#3cb371') # null値の色を設定
+  ax.figure.axes[-1].yaxis.label.set_size(30) # cbarのラベルのサイズ
+  
 def color_bar(value):
   m = cm.ScalarMappable(cmap=cm.jet)
   m.set_array(value)
@@ -73,8 +100,8 @@ def color(value):
   return cm.jet(value/float(value.max()))
 
 def main(gravity_path, a4d4_f, tags):
-  for abs_file in utils.file_list(gravity_path): # 実データ用
-  # for abs_file in TEST_DATA:  # テスト用
+  # for abs_file in utils.file_list(gravity_path): # 実データ用
+  for abs_file in TEST_DATA:  # テスト用
     print(abs_file)
 
     df = pd.read_csv(abs_file)
@@ -88,8 +115,9 @@ def main(gravity_path, a4d4_f, tags):
 
     # テストデータ
     # origin, dest, amount = test_data.HeatMap.create()
-
-    plot_heatmap(dest,origin,amount)
+    
+    plot_mesh_heatmap(df, 'amount', 'origin', 'destination')
+    # plot_heatmap(dest,origin,amount)
 
     date_name = utils.file_date(abs_file)
     outpath = c["DATA_PATH"] + "/gravity_heatmap" + tags
@@ -126,9 +154,9 @@ if __name__ == '__main__':
   utils.dump_description("Plot Heat Map.")
 
   default()
-  a4d4()
-  one_point()
-  onepoint_a4d4()
+  # a4d4()
+  # one_point()
+  # onepoint_a4d4()
 
   elapsed_time = time.time() - start
   print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
