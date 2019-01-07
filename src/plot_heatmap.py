@@ -26,7 +26,6 @@ def main(gravity_path, a4d4_f, tags):
     df = pd.read_csv(abs_file)
     if a4d4_f:
       df = df[(df.amount > 4) & (df.distance > 4)]
-    # df = df.sort_values('amount',ascending=False) # 移動量の多い順にソート
     print(df.loc[:,['origin','destination', 'amount']])
 
     heatmap.plot_heatmap(df, 'amount', 'origin', 'destination')
@@ -59,13 +58,26 @@ def onepoint_a4d4():
   a4d4_f = True
   tags = "/onepoint_a4d4"
   main(gravity_data,a4d4_f,tags)
-    
+
+# 全日データを用いてヒートマップを作成
+def all_day():
+  all_df = utils.all_df(GRAVITY_PATH)
+  print(all_df.loc[:,['origin','destination', 'amount']])
+
+  heatmap.plot_heatmap(all_df, 'amount', 'origin', 'destination')
+  
+  date_name = 'all_day'
+  outpath = c["DATA_PATH"] + "/gravity_heatmap" + '/all_day'
+  
+  heatmap.export_pdf(outpath,date_name)
+
 if __name__ == '__main__':
   start = time.time()
   # スクリプトの概要をdump
   utils.dump_description("Plot Heat Map.")
 
-  default()
+  all_day()
+  # default()
   # a4d4()
   # one_point()
   # onepoint_a4d4()

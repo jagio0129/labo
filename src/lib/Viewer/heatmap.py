@@ -32,21 +32,23 @@ def plot_heatmap(data_frame,values,column,index):
   unq_x, unq_y = len(data_frame.origin.unique()), len(data_frame.destination.unique())
   print("Destination : %d, Origin : %d" % (unq_x, unq_y))
 
-  fig = plt.figure(figsize=(22, 30),dpi=100) #...1
+  # plotするデータの整形
+  df_pivot = pd.pivot_table(data=data_frame, values=values, columns=column, index=index)
+
+  ratio = 8
+  fig = plt.figure(figsize=(len(df_pivot.columns)/ratio, len(df_pivot)/ratio),dpi=100) #...1
 
   plt.title("Heat Map",fontsize=40)
   plt.xlabel("Destination",fontsize=30)
   plt.ylabel("Origin", fontsize=30)
 
-  plt.yticks(fontsize=7)              # y軸のlabel
-  plt.xticks(rotation=90, fontsize=7) # x軸のlabel
-  
-  # plotするデータの整形
-  df_pivot = pd.pivot_table(data=data_frame, values=values, columns=column, index=index)
-  # 列方向に値の昇順ソート
+  # 列ごとに値の降順ソート
   for column in df_pivot.columns.values:
-    df_pivot = df_pivot.sort_values(by=column)
+    df_pivot = df_pivot.sort_values(by=column,ascending=False)
   print(df_pivot)
+  
+  plt.yticks(fontsize=3)              # y軸のlabel
+  plt.xticks(rotation=90,fontsize=3) # x軸のlabel
   
   # cbarの設定
   cmap = sns.cubehelix_palette(as_cmap=True, light=.9)
