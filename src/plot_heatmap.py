@@ -76,8 +76,8 @@ if __name__ == '__main__':
   # スクリプトの概要をdump
   utils.dump_description("Plot Heat Map.")
 
-  all_day()
-  # default()
+  # all_day()
+  default()
   # a4d4()
   # one_point()
   # onepoint_a4d4()

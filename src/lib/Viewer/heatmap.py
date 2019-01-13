@@ -15,6 +15,18 @@ import seaborn as sns
 # フォントの指定名確認
 # print([f.name for f in matplotlib.font_manager.fontManager.ttflist])  
 
+# ヒートマップを見やすようにソート
+def sort(data_frame):
+  # 列ごとに値の降順ソート
+  for column in data_frame.columns.values:
+    data_frame = data_frame.sort_values('All')
+
+  data_frame = data_frame.drop('All', axis=1) # All列削除
+  data_frame = data_frame.drop('All', axis=0) # All行削除
+  # 行ごとにソート
+  data_frame = data_frame.sort_values(by='千代田区',ascending=False, axis=1)
+  return data_frame
+
 def export_pdf(path, filename="default"):
   outpath = "%s/%s.pdf" % (path, filename)
   file_path = os.path.dirname(outpath)
@@ -33,7 +45,7 @@ def plot_heatmap(data_frame,values,column,index):
   print("Destination : %d, Origin : %d" % (unq_x, unq_y))
 
   # plotするデータの整形
-  df_pivot = pd.pivot_table(data=data_frame, values=values, columns=column, index=index)
+  df_pivot = pd.pivot_table(data=data_frame, values=values, columns=column, index=index, aggfunc="count",margins=True)
 
   ratio = 8
   fig = plt.figure(figsize=(len(df_pivot.columns)/ratio, len(df_pivot)/ratio),dpi=100) #...1
@@ -42,9 +54,7 @@ def plot_heatmap(data_frame,values,column,index):
   plt.xlabel("Destination",fontsize=30)
   plt.ylabel("Origin", fontsize=30)
 
-  # 列ごとに値の降順ソート
-  for column in df_pivot.columns.values:
-    df_pivot = df_pivot.sort_values(by=column,ascending=False)
+  df_pivot = sort(df_pivot)
   print(df_pivot)
   
   plt.yticks(fontsize=3)              # y軸のlabel
