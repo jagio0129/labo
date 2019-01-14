@@ -88,3 +88,11 @@ def puboffice_latlon(pupoffice_data_path, city_id):
       return [row["lat"], row["lon"]]
   
   return [None,None]
+
+# 市区町村IDから都道府県名を返す
+def prefecture(geo_json, city_id):
+  for feature in geo_json['features']:
+    if str(city_id) == feature['properties']['N03_007']:
+      return feature['properties']['N03_001']
+  return None
+    
