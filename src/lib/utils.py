@@ -3,6 +3,7 @@
 import re
 import glob
 import json
+import pandas as pd
 
 # 実データ(yyyy-mm-dd.csv)だけを絶対パスのlistで返す
 def file_list(folder):
@@ -33,3 +34,8 @@ def dump_description(destination):
   print(hash_str)
   print("# %s #" % destination)
   print(hash_str)
+
+# 全日のデータを統合して返す
+def all_df(folder):
+  all_df = pd.concat([pd.read_csv(abs_file) for abs_file in file_list(folder)])
+  return all_df

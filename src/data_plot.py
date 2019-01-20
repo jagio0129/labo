@@ -39,6 +39,7 @@ def data_fit(x, y):
   logx, logy = np.log(x), np.log(y)
   b, a = fitter.Original.fit(logx, logy)
   a = math.e ** a
+  print(a, b)
   plt.plot(x, fitter.pow_func(x, a, b), "r-")
 
 # データとフィッティング線をログススケールでプロット
@@ -216,9 +217,9 @@ if __name__ == '__main__':
 
   m = Main()
   m.default()
-  m.a4d4()
-  m.one_point()
-  m.onepoint_a4d4()
+  # m.a4d4()
+  # m.one_point()
+  # m.onepoint_a4d4()
 
   elapsed_time = time.time() - start
   print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
