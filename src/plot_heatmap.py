@@ -24,8 +24,8 @@ GEO_JSON         = c["GEO_JSON"]
 TEST_DATA        = [GRAVITY_PATH + "/gravity_param-od-2013-07-01.csv"]
 
 def main(gravity_path, a4d4_f, tags):
-  # for abs_file in utils.file_list(gravity_path): # 実データ用
-  for abs_file in TEST_DATA:  # テスト用
+  for abs_file in utils.file_list(gravity_path): # 実データ用
+  # for abs_file in TEST_DATA:  # テスト用
     print(abs_file)
 
     df = pd.read_csv(abs_file)
@@ -82,8 +82,8 @@ class Prefecture:
   # csvデータを作成する
   @classmethod
   def create(cls):
-    # for abs_file in utils.file_list(gravity_path): # 実データ用
-    for abs_file in TEST_DATA:  # テスト用
+    for abs_file in utils.file_list(c["GRAVITY_PATH"] + "/default"): # 実データ用
+    # for abs_file in TEST_DATA:  # テスト用
       df = pd.read_csv(abs_file)
       geo_json = utils.json_parser(GEO_JSON)  # GeoJSONをロード
       od_counter = defaultdict(int)
@@ -130,13 +130,14 @@ if __name__ == '__main__':
   utils.dump_description("Plot Heat Map.")
 
   # all_day()
-  # default()
+  default()
   # a4d4()
   # one_point()
   # onepoint_a4d4()
 
-  Prefecture.create()
-  Prefecture.run()
+  # 県別のヒートマップを作成する
+  # Prefecture.create()
+  # Prefecture.run()
 
   elapsed_time = time.time() - start
   print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
